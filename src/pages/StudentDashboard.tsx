@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { store, Deck, saveLocalUserDecks } from "../lib/store";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { Plus, X, Play, TrendingUp, Users, Target, BookOpen, BrainCircuit, Activity, Flame, ArrowLeft, CheckCircle2, XCircle, ArrowRight, Loader2, Trophy, Sparkles, Maximize2, Minimize2, Bell, BellOff, BellRing, Settings, AlertTriangle, Trash2, Snowflake, Volume2, VolumeX, Clock, Network, Award, Bot, User, Crown, ChevronUp, ChevronDown, Minus, Shield, RefreshCw, Heart, LogOut, Bug, Type, Library, Camera, Edit3, HelpCircle, Cpu, ShoppingBag, Lock } from "lucide-react";
+import { Plus, X, Play, TrendingUp, Users, Target, BookOpen, BrainCircuit, Activity, Flame, ArrowLeft, CheckCircle2, XCircle, ArrowRight, Loader2, Trophy, Sparkles, Maximize2, Minimize2, Bell, BellOff, BellRing, Settings, AlertTriangle, Trash2, Snowflake, Volume2, VolumeX, Clock, Network, Award, Bot, User, Crown, ChevronUp, ChevronDown, Minus, Shield, RefreshCw, Heart, LogOut, Bug, Type, Library, Camera, Edit3, HelpCircle, Cpu, ShoppingBag, Lock, Zap, Ghost, ShieldAlert } from "lucide-react";
 import { MarcusAureliusIcon } from "../components/MarcusAureliusIcon";
 import { cn } from "../lib/utils";
 import { safeRequest } from "../utils/apiClient";
@@ -158,7 +158,22 @@ const MOTIVATION_QUOTES = [
   "Persistence guarantees that results are inevitable. - Paramahansa Yogananda",
   "Do what you can, with what you have, where you are. - Theodore Roosevelt",
   "The master has failed more times than the beginner has even tried. - Stephen McCranie",
-  "Quality is not an act, it is a habit. - Aristotle"
+  "Quality is not an act, it is a habit. - Aristotle",
+  "If it is not right do not do it; if it is not true do not say it. - Marcus Aurelius",
+  "First say to yourself what you would be; and then do what you have to do. - Epictetus",
+  "No man is free who is not master of himself. - Epictetus",
+  "Luck is what happens when preparation meets opportunity. - Seneca",
+  "The best revenge is not to be like your enemy. - Marcus Aurelius",
+  "Man is not worried by real problems so much as by his imagined anxieties about real problems. - Epictetus",
+  "It is not death that a man should fear, but he should fear never beginning to live. - Marcus Aurelius",
+  "Wealth consists not in having great possessions, but in having few wants. - Epictetus",
+  "Whatever can happen at any time can happen today. - Seneca",
+  "To be calm is the highest achievement of the self. - Zen proverb",
+  "He who has a why to live for can bear almost any how. - Friedrich Nietzsche",
+  "That which does not kill us makes us stronger. - Friedrich Nietzsche",
+  "I think, therefore I am. - René Descartes",
+  "There is only one good, knowledge, and one evil, ignorance. - Socrates",
+  "We are what we repeatedly do. Excellence, then, is not an act, but a habit. - Aristotle"
 ];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -187,6 +202,9 @@ export default function StudentDashboard() {
   const { click, success, error } = useSound();
   const user = store.getCurrentUser();
   const prevLevelRef = useRef<number | null>(null);
+  const currentFreezeCost = 400 * Math.pow(2, user?.streakFreezeCount || 0);
+  
+  const [levelUpData, setLevelUpData] = useState<{level: number, quote: string} | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -194,8 +212,30 @@ export default function StudentDashboard() {
       const currentLevel = user.level || xpInfo.currentLevel;
       
       if (prevLevelRef.current !== null && currentLevel > prevLevelRef.current) {
+         const LEVEL_UP_QUOTES = [
+           "Sự đầu tư vào kiến thức luôn sinh lợi cao nhất. - Benjamin Franklin",
+           "Cái rễ của học hành thì đắng cay, nhưng quả của nó thì ngọt ngào. - Aristotle",
+           "Cách duy nhất để học là qua những trải nghiệm. - Khuyết danh",
+           "Bộ óc không phải là một chiếc bình cần phải đổ đầy, mà là ngọn lửa cần được thắp sáng. - Plutarch",
+           "Hãy học khi người thợ khác đang ngủ; làm việc khi người thợ khác trăn trở. - William Arthur Ward",
+           "Hiểu biết giới hạn của bản thân chính là đỉnh cao của sự khôn ngoan. - Plato",
+           "Tôi không thể dạy ai cái gì, tôi chỉ có thể làm họ suy nghĩ. - Socrates",
+           "Kẻ bất trí phàn nàn về sự thiếu sót của người khác. Kẻ trí tuệ phàn nàn về chính mình. - Immanuel Kant",
+           "Tự do không phải là làm những gì mình muốn, mà là làm những gì mình cho là đúng. - Immanuel Kant",
+           "Nơi nào có tình yêu, nơi đó có sự sống. - Mahatma Gandhi",
+           "Tri thức là sức mạnh, nhưng hành động mới làm nên sự vĩ đại. - Khuyết danh",
+           "Biết người là khôn, biết mình là sáng. Tự thắng mình là mạnh. - Lão Tử",
+           "Ta không phải là người thông minh, ta chỉ gắn bó với các vấn đề lâu hơn mà thôi. - Albert Einstein",
+           "Một hành trình ngàn dặm luôn bắt đầu từ một bước đi nhỏ bé. - Lão Tử",
+           "Khi chúng ta không còn có thể thay đổi một tình huống, chúng ta bị thách thức phải thay đổi chính mình. - Viktor Frankl",
+           "Điều duy nhất cản trở ta học hỏi chính là nền giáo dục của ta. - Albert Einstein",
+           "Lý tính luôn là nô lệ của đam mê. - David Hume",
+           "Không có gì trong trí tuệ mà không qua giác quan trước đó. - John Locke"
+         ];
+         const randomQuote = LEVEL_UP_QUOTES[Math.floor(Math.random() * LEVEL_UP_QUOTES.length)];
+         setLevelUpData({ level: currentLevel, quote: randomQuote });
          toast.success(`🎉 Trí tuệ thăng hoa! Bạn đã đạt cấp ${currentLevel}!`, {
-           description: "Bạn vừa mở khóa chân trời nhận thức mới. Thật xuất sắc! Hãy xem xét đổi danh hiệu triết gia trong hồ sơ."
+           description: "Bạn vừa mở khóa chân trời nhận thức mới. Thật xuất sắc!"
          });
       }
       prevLevelRef.current = currentLevel;
@@ -726,9 +766,16 @@ export default function StudentDashboard() {
     return dbUsers.length > 0
       ? dbUsers.map(u => {
           const isStale = u.lastWeeklyResetWeek && u.lastWeeklyResetWeek !== currentWeekId;
+          const isMasked = u.hideRankUntil && u.hideRankUntil > Date.now();
           return {
             ...u,
-            points: isStale ? 0 : (u.points || 0)
+            name: isMasked ? "Kẻ Ẩn Danh" : u.name,
+            photoURL: isMasked ? "" : u.photoURL,
+            avatarBorder: isMasked ? "none" : u.avatarBorder,
+            title: isMasked ? "" : u.title,
+            points: isStale ? 0 : (u.points || 0),
+            level: isMasked ? 1 : u.level,
+            streak: isMasked ? 0 : u.streak
           };
         }).filter(u => {
           const roleLower = (u.role || "").toLowerCase();
@@ -742,9 +789,16 @@ export default function StudentDashboard() {
         ? []
         : [...store.getUsers()].map(u => {
             const isStale = u.lastWeeklyResetWeek && u.lastWeeklyResetWeek !== currentWeekId;
+            const isMasked = u.hideRankUntil && u.hideRankUntil > Date.now();
             return {
               ...u,
-              points: isStale ? 0 : (u.points || 0)
+              name: isMasked ? "Kẻ Ẩn Danh" : u.name,
+              photoURL: isMasked ? "" : u.photoURL,
+              avatarBorder: isMasked ? "none" : u.avatarBorder,
+              title: isMasked ? "" : u.title,
+              points: isStale ? 0 : (u.points || 0),
+              level: isMasked ? 1 : u.level,
+              streak: isMasked ? 0 : u.streak
             };
           }).filter(u => {
             const roleLower = (u.role || "").toLowerCase();
@@ -753,7 +807,7 @@ export default function StudentDashboard() {
             const hasPoints = (u.points || 0) > 0;
             return isTargetRole && isValidUser && (roleLower === "admin" || roleLower === "teacher" || hasPoints);
           }).sort((a, b) => b.points - a.points);
-  }, [dbUsers]);
+  }, [dbUsers, store.getCurrentUser()?.hideRankUntil, store.getCurrentUser()?.doubleXPUntil]);
   
   const prevRanksRef = useRef<Record<string, number>>({});
   const [rankTrends, setRankTrends] = useState<Record<string, 'up' | 'down' | 'same'>>({});
@@ -1483,6 +1537,50 @@ export default function StudentDashboard() {
 
   return (
     <div className="space-y-8 animate-in fade-in pb-12 relative w-full max-w-full overflow-x-hidden">
+      <AnimatePresence>
+        {levelUpData && (
+           <motion.div 
+             initial={{ opacity: 0, scale: 0.95 }}
+             animate={{ opacity: 1, scale: 1 }}
+             exit={{ opacity: 0, scale: 1.05 }}
+             className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none p-4"
+           >
+             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm pointer-events-auto" onClick={() => setLevelUpData(null)} />
+             <div className="relative glass-panel rounded-3xl p-8 max-w-xl w-full flex flex-col items-center text-center shadow-2xl pointer-events-auto bg-gradient-to-b from-amber-500/10 to-transparent border border-amber-500/20">
+                <button onClick={() => setLevelUpData(null)} className="absolute top-4 right-4 p-2 bg-stone-100 dark:bg-zinc-800 rounded-full hover:scale-105 transition">
+                  <X className="w-5 h-5 text-stone-500" />
+                </button>
+                <div className="w-24 h-24 mb-6 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-600 flex items-center justify-center p-1 shadow-[0_0_30px_rgba(251,191,36,0.5)]">
+                   <div className="w-full h-full bg-stone-900 rounded-full flex items-center justify-center relative overflow-hidden">
+                      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-500/30 to-transparent animate-pulse" />
+                      <span className="font-extrabold text-4xl text-amber-500 z-10">{levelUpData.level}</span>
+                   </div>
+                </div>
+                
+                <h2 className="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-yellow-500 dark:from-amber-400 dark:to-yellow-300">
+                  Thăng Cấp!
+                </h2>
+                <p className="text-stone-600 dark:text-stone-300 font-medium mb-8">
+                  Ngài vừa đạt ranh giới tri thức mới.
+                </p>
+
+                <div className="relative p-6 bg-stone-100/50 dark:bg-zinc-900/50 rounded-2xl border border-stone-200 dark:border-zinc-800 italic">
+                  <BookOpen className="absolute -top-3 -left-3 w-8 h-8 text-amber-500 opacity-50" />
+                  <p className="text-stone-700 dark:text-stone-200 font-medium whitespace-pre-wrap">"{levelUpData.quote.split(" - ")[0]}"</p>
+                  <p className="text-sm font-bold text-stone-500 dark:text-stone-400 mt-2">— {levelUpData.quote.split(" - ")[1] || "Khuyết danh"}</p>
+                </div>
+                
+                <button 
+                  onClick={() => setLevelUpData(null)}
+                  className="mt-8 px-8 py-3 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
+                >
+                  Lĩnh Ngộ
+                </button>
+             </div>
+           </motion.div>
+        )}
+      </AnimatePresence>
+
       <OnboardingTour onComplete={() => {
         const hasRun = localStorage.getItem("hasRunTutorial");
         if (hasRun !== "true") {
@@ -1556,12 +1654,12 @@ export default function StudentDashboard() {
 
             <button
                onClick={handleBuyFreeze}
-               disabled={user?.streakFreeze || (user ? user.points < 400 : true)}
-               title="Streak Freeze (Bảo vệ chuỗi ngày học) - Tốn 400 pts"
+               disabled={user?.streakFreeze || (user ? user.points < currentFreezeCost : true)}
+               title={`Streak Freeze (Bảo vệ chuỗi ngày học) - Tốn ${currentFreezeCost} pts`}
                className={cn("px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition hover:scale-105", user?.streakFreeze ? "bg-blue-500 text-white" : "bg-blue-500/20 text-blue-700 dark:text-blue-400 opacity-60 hover:opacity-100 disabled:opacity-30 disabled:hover:scale-100")}
             >
               <Snowflake className={cn("w-5 h-5", user?.streakFreeze ? "animate-pulse" : "")} />
-              {user?.streakFreeze ? "Đã Kích Hoạt" : "Băng Hỏa Vệ (400 pts)"}
+              {user?.streakFreeze ? "Đã Kích Hoạt" : `Băng Hỏa Vệ (${currentFreezeCost} pts)`}
             </button>
 
             <div id="trigger-quiz-from-dashboard">
@@ -2799,23 +2897,24 @@ export default function StudentDashboard() {
                 </p>
               </div>
               <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
-                <span className="font-extrabold text-base text-blue-600 dark:text-blue-400">400 Tinh Hoa</span>
+                <span className="font-extrabold text-base text-blue-600 dark:text-blue-400">{currentFreezeCost} Tinh Hoa</span>
                 <button
                   onClick={() => {
                     if (user?.streakFreeze) {
                       alert("Ngài đã sở hữu Tấm Khiên Aegis hộ thể rồi!");
                       return;
                     }
-                    if (user && user.points < 400) {
+                    if (user && user.points < currentFreezeCost) {
                       alert("Không đủ Tinh Hoa! Hãy chăm chỉ ôn luyện để lĩnh hội thêm.");
                       return;
                     }
-                    if (store.buyStreakFreeze(400)) {
+                    if (!confirm(`Xác nhận đánh đổi ${currentFreezeCost} Tinh Hoa lấy Tấm Khiên Aegis (Bảo Vệ Streak)?`)) return;
+                    if (store.buyStreakFreeze(currentFreezeCost)) {
                       alert("Thành công! Tấm Khiên Aegis đã được kích hoạt, bảo vệ chuỗi ngày học của ngài!");
                       setForceRender(prev => prev + 1);
                     }
                   }}
-                  disabled={user?.streakFreeze || (user ? user.points < 400 : true)}
+                  disabled={user?.streakFreeze || (user ? user.points < currentFreezeCost : true)}
                   className="px-4 py-2 bg-blue-500 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 hover:shadow-blue-500/40 active:scale-95 transition disabled:opacity-40 disabled:pointer-events-none"
                 >
                   {user?.streakFreeze ? "Đã Kích Hoạt" : "Kích Hoạt"}
@@ -2848,6 +2947,7 @@ export default function StudentDashboard() {
                       alert("Ngài chưa đủ Tinh Hoa! Hãy tiếp tục trau dồi để đổi lấy vật phẩm thiêng liêng.");
                       return;
                     }
+                    if (!confirm(`Xác nhận đánh đổi 150 Tinh Hoa lấy Mật Hoa Ambrosia (+50 XP)?`)) return;
                     if (store.buyXPPotion(150, 50)) {
                       alert("Đã dùng mật hoa! Trí tuệ bừng sáng, ngài nhận ngay +50 XP.");
                       setForceRender(prev => prev + 1);
@@ -2886,6 +2986,7 @@ export default function StudentDashboard() {
                       alert("Cần 600 Tinh Hoa để chứng minh năng lực. Hãy tiếp tục học nhé!");
                       return;
                     }
+                    if (!confirm(`Xác nhận đánh đổi 600 Tinh Hoa để lập tức thăng 1 cấp độ?`)) return;
                     if (store.buyLevelUp(600)) {
                       alert("Phép thuật khai sáng! Trí tuệ thăng hoa, ngài đã được nâng lên cấp độ mới! (Level +1)");
                       setForceRender(prev => prev + 1);
@@ -2920,24 +3021,28 @@ export default function StudentDashboard() {
                 <span className="font-extrabold text-base text-cyan-600 dark:text-cyan-400">500 Tinh Hoa</span>
                 <button
                   onClick={async () => {
-                    if (user?.avatarBorder === "diamond") {
-                      alert("Ngài đã mang bảo vật Hào Quang Olympus vinh quang rực rỡ rồi!");
+                    if (user?.avatarBorder === "diamond" || user?.unlockedCustomBorders?.includes("diamond")) {
+                      alert("Hào quang Kim Cương đã nằm trong bộ sưu tập Khung Cấp Độ của ngài rồi!");
                       return;
                     }
                     if (user && user.points < 500) {
                       alert("Ngài chưa đủ Tinh Hoa để sở hữu vật phẩm thần thánh này!");
                       return;
                     }
+                    if (!confirm(`Xác nhận đánh đổi 500 Tinh Hoa để sở hữu Hào Quang Olympus (Khung Kim Cương)?`)) return;
                     try {
                       const newPoints = user!.points - 500;
+                      const newBorders = Array.from(new Set([...(user!.unlockedCustomBorders || []), "diamond"]));
                       const { dbService } = await import("../lib/firebase");
                       await dbService.updateUserProfile(user!.id, { 
                         points: newPoints,
-                        avatarBorder: "diamond" 
+                        avatarBorder: "diamond",
+                        unlockedCustomBorders: newBorders
                       });
                       store.updateCurrentUser({ 
                         points: newPoints,
-                        avatarBorder: "diamond" 
+                        avatarBorder: "diamond",
+                        unlockedCustomBorders: newBorders
                       }, true);
                       
                       alert("Thu nhận thành công! Hào quang rực rỡ đang bao phủ lấy ngài!");
@@ -2950,7 +3055,7 @@ export default function StudentDashboard() {
                   disabled={user ? user.points < 500 : true}
                   className="px-4 py-2 bg-cyan-500 text-white rounded-xl text-xs font-bold shadow-md shadow-cyan-500/20 hover:shadow-cyan-500/40 active:scale-95 transition"
                 >
-                  {user?.avatarBorder === "diamond" ? "Đã Sở Hữu" : "Nhận Hào Quang"}
+                  { (user?.avatarBorder === "diamond" || user?.unlockedCustomBorders?.includes("diamond")) ? "Đã Sở Hữu" : "Nhận Hào Quang"}
                 </button>
               </div>
             </div>
@@ -2976,24 +3081,28 @@ export default function StudentDashboard() {
                 <span className="font-extrabold text-base text-emerald-600 dark:text-emerald-400">300 Tinh Hoa</span>
                 <button
                   onClick={async () => {
-                    if (user?.title === "Học Giả Bách Khoa") {
-                      alert("Tôn danh trí tuệ của ngài vốn đã vang dội các nghị viện!");
+                    if (user?.title === "Học Giả Bách Khoa" || user?.unlockedCustomTitles?.includes("Học Giả Bách Khoa")) {
+                      alert("Tôn danh này ngài đã sở hữu rồi, hãy vào danh sách Danh Hiệu để thay đổi!");
                       return;
                     }
                     if (user && user.points < 300) {
                       alert("Chưa đủ 300 Tinh Hoa. Ngài cần rèn luyện thêm để chứng tỏ học thức.");
                       return;
                     }
+                    if (!confirm(`Xác nhận đánh đổi 300 Tinh Hoa để sở hữu Phong Hiệu 'Học Giả Bách Khoa'?`)) return;
                     try {
                       const newPoints = user!.points - 300;
+                      const newTitles = Array.from(new Set([...(user!.unlockedCustomTitles || []), "Học Giả Bách Khoa"]));
                       const { dbService } = await import("../lib/firebase");
                       await dbService.updateUserProfile(user!.id, { 
                         points: newPoints,
-                        title: "Học Giả Bách Khoa" 
+                        title: "Học Giả Bách Khoa",
+                        unlockedCustomTitles: newTitles
                       });
                       store.updateCurrentUser({ 
                         points: newPoints,
-                        title: "Học Giả Bách Khoa" 
+                        title: "Học Giả Bách Khoa",
+                        unlockedCustomTitles: newTitles
                       }, true);
                       
                       alert("Tuyệt hảo! Ngài đã chính thức được phong tước hiệu 'Học Giả Bách Khoa' lừng lẫy!");
@@ -3005,7 +3114,7 @@ export default function StudentDashboard() {
                   disabled={user ? user.points < 300 : true}
                   className="px-4 py-2 bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/20 hover:shadow-emerald-500/40 active:scale-95 transition"
                 >
-                  {user?.title === "Thủ Lĩnh Sparta" ? "Đã Chọn Hiệu" : "Đổi Hiệu Mới"}
+                  { (user?.title === "Học Giả Bách Khoa" || user?.unlockedCustomTitles?.includes("Học Giả Bách Khoa")) ? "Đã Sở Hữu" : "Mua Danh Hiệu"}
                 </button>
               </div>
             </div>
@@ -3039,6 +3148,7 @@ export default function StudentDashboard() {
                       alert("Ngài chưa đủ Tinh Hoa (Aether)!");
                       return;
                     }
+                    if (!confirm("Xác nhận đánh đổi 200 Tinh Hoa để sở hữu biểu tượng Trái Tim Sư Tử?")) return;
                     try {
                       const newPoints = user!.points - 200;
                       const { dbService } = await import("../lib/firebase");
@@ -3062,6 +3172,98 @@ export default function StudentDashboard() {
                   className="px-4 py-2 bg-red-500 text-white rounded-xl text-xs font-bold shadow-md shadow-red-500/20 hover:shadow-red-500/40 active:scale-95 transition"
                 >
                   {user?.isSchoolLover ? "Đã Đánh Thức" : "Đánh Thức Trái Tim"}
+                </button>
+              </div>
+            </div>
+
+            {/* Item 7: Rương Báu Hư Không */}
+            <div className="glass p-6 rounded-2xl border border-fuchsia-500/20 hover:border-fuchsia-500/40 transition-all duration-300 flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute -top-12 -right-12 w-24 h-24 bg-fuchsia-500/5 rounded-full group-hover:scale-150 transition-transform duration-500" />
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="p-3 bg-fuchsia-500/10 rounded-xl text-fuchsia-500">
+                    <Crown className="w-6 h-6 animate-pulse" />
+                  </span>
+                  <span className="px-3 py-1 bg-fuchsia-500/20 text-fuchsia-700 dark:text-fuchsia-300 rounded-full text-xs font-bold">
+                    Vật Phẩm Hư Không
+                  </span>
+                </div>
+                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Chiếc Hộp Pandora</h4>
+                <p className="text-xs opacity-70 mb-4 min-h-[40px]">
+                  Mang trong mình sự hỗn mang. Mở hộp sẽ có cơ hội nhận phần thưởng khổng lồ (Nhiều XP, Tinh Hoa...) hoặc có thể rỗng tuếch!
+                </p>
+              </div>
+              <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
+                <span className="font-extrabold text-base text-fuchsia-600 dark:text-fuchsia-400">200 Tinh Hoa</span>
+                <button
+                  onClick={() => {
+                    if (user && user.points < 200) {
+                      alert("Không đủ 200 Tinh Hoa để mở chiếc hộp bí ẩn này!");
+                      return;
+                    }
+                    if (!confirm("Xác nhận đánh đổi 200 Tinh Hoa để mở hộp Pandora bí ẩn?")) return;
+                    store.updateCurrentUser({ points: user.points - 200 }); 
+                    
+                    const rand = Math.random();
+                    if (rand < 0.1) {
+                       store.updateCurrentUser({ level: (user.level || 1) + 1 });
+                       store.buyXPPotion(0, 100);
+                       alert("JACKPOT! Bạn mở ra sức mạnh thần thánh: Tăng 1 Cấp Độ và nhận 100 XP!");
+                    } else if (rand < 0.4) {
+                       store.updateCurrentUser({ points: store.getCurrentUser()!.points + 350 }); 
+                       alert("Quả ngọt! Chiếc hộp trả lại bạn 350 Tinh Hoa (Lãi 150).");
+                    } else if (rand < 0.7) {
+                       store.buyXPPotion(0, 75);
+                       alert("Không tệ! Bạn nhận được tri thức thượng cổ quy đổi thành 75 XP.");
+                    } else {
+                       alert("Chiếc hộp trống rỗng! Trí tuệ của bạn bị bóng đêm hư không nuốt chửng...");
+                    }
+                    setForceRender(prev => prev + 1);
+                  }}
+                  disabled={user ? user.points < 200 : true}
+                  className="px-4 py-2 bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white rounded-xl text-xs font-bold shadow-md shadow-fuchsia-500/20 hover:shadow-fuchsia-500/40 active:scale-95 transition"
+                >
+                  Mở Hộp (Thử Vận)
+                </button>
+              </div>
+            </div>
+
+            {/* Item 9: Cấm Thuật Hiến Tế */}
+            <div className="glass p-6 rounded-2xl border border-rose-500/20 hover:border-rose-500/40 transition-all duration-300 flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute -top-12 -right-12 w-24 h-24 bg-rose-500/5 rounded-full group-hover:scale-150 transition-transform duration-500" />
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="p-3 bg-rose-500/10 rounded-xl text-rose-500">
+                    <Activity className="w-6 h-6 animate-pulse" />
+                  </span>
+                  <span className="px-3 py-1 bg-rose-500/20 text-rose-700 dark:text-rose-300 rounded-full text-xs font-bold">
+                    Cấm Thuật
+                  </span>
+                </div>
+                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Hiến Tế Cấp Độ</h4>
+                <p className="text-xs opacity-70 mb-4 min-h-[40px]">
+                  Hy sinh 1 Cấp Độ hiện tại của bạn để đổi lấy 1000 Tinh Hoa. Sức mạnh này đánh đổi bằng chính kiến thức bạn đã học!
+                </p>
+              </div>
+              <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
+                <span className="font-extrabold text-base text-rose-600 dark:text-rose-400">Hiến Tế 1 Level</span>
+                <button
+                  onClick={() => {
+                    const currentLevel = user?.level || 1;
+                    if (currentLevel <= 1) {
+                       alert("Bạn chỉ đang ở Cấp 1, không thể hiến tế thêm được nữa!");
+                       return;
+                    }
+                    if (confirm(`Bạn có chắc muốn hiến tế 1 Cấp Độ (Từ Cấp ${currentLevel} xuống Cấp ${currentLevel - 1}) để lấy 1000 Tinh Hoa không?`)) {
+                       store.updateCurrentUser({ level: currentLevel - 1, points: (user?.points || 0) + 1000 });
+                       alert("Hiến tế hoàn tất! Bạn vừa nhận 1000 Tinh Hoa.");
+                       setForceRender(prev => prev + 1);
+                    }
+                  }}
+                  disabled={user ? (user.level || 1) <= 1 : true}
+                  className="px-4 py-2 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-xl text-xs font-bold shadow-md shadow-red-500/20 hover:shadow-red-500/40 active:scale-95 transition"
+                >
+                  Thực Hiện
                 </button>
               </div>
             </div>
@@ -3248,24 +3450,28 @@ export default function StudentDashboard() {
                 <span className="font-extrabold text-base text-rose-600 dark:text-rose-400">750 Tinh Hoa</span>
                 <button
                   onClick={async () => {
-                    if (user?.title === "Quân Vương Triết Học") {
-                      alert("Tri thức của ngài đã đạt cảnh giới tối cao rồi, không cần mua nữa!");
+                    if (user?.title === "Quân Vương Triết Học" || user?.unlockedCustomTitles?.includes("Quân Vương Triết Học")) {
+                      alert("Vương miện tối cao này ngài đã sở hữu trong bộ sưu tập rồi!");
                       return;
                     }
                     if (user && user.points < 750) {
                       alert("Tích trữ đủ 750 điểm Tinh Hoa để chinh phục tước hiệu này nhé!");
                       return;
                     }
+                    if (!confirm("Ngài có chắc chắn muốn mua danh hiệu Quân Vương Triết Học không?")) return;
                     try {
                       const newPoints = user!.points - 750;
+                      const newTitles = Array.from(new Set([...(user!.unlockedCustomTitles || []), "Quân Vương Triết Học"]));
                       const { dbService } = await import("../lib/firebase");
                       await dbService.updateUserProfile(user!.id, { 
                         points: newPoints,
-                        title: "Quân Vương Triết Học" 
+                        title: "Quân Vương Triết Học",
+                        unlockedCustomTitles: newTitles
                       });
                       store.updateCurrentUser({ 
                         points: newPoints,
-                        title: "Quân Vương Triết Học" 
+                        title: "Quân Vương Triết Học",
+                        unlockedCustomTitles: newTitles
                       }, true);
 
                       alert("Đỉnh cao của sự khai sáng! Chào mừng ngài, Quân Vương Triết Học vĩ đại!");
@@ -3277,7 +3483,7 @@ export default function StudentDashboard() {
                   disabled={user ? user.points < 750 : true}
                   className="px-4 py-2 bg-rose-500 text-white rounded-xl text-xs font-bold shadow-md shadow-rose-500/20 hover:shadow-rose-500/40 active:scale-95 transition"
                 >
-                  Nhận Vương Miện
+                  { (user?.title === "Quân Vương Triết Học" || user?.unlockedCustomTitles?.includes("Quân Vương Triết Học")) ? "Đã Sở Hữu" : "Nhận Vương Miện"}
                 </button>
               </div>
             </div>
@@ -3310,6 +3516,7 @@ export default function StudentDashboard() {
                       alert("Thiếu 100 Tinh Hoa rồi, luyện thêm bài đi nhé!");
                       return;
                     }
+                    if (!confirm("Xác nhận chiết xuất 100 Tinh Hoa để sạc thêm năng lượng (1 Lượt) cho United Engine?")) return;
                     try {
                       const newPoints = user!.points - 100;
                       const newUses = (user!.unitedEngineUses || 0) + 1;
@@ -3333,6 +3540,150 @@ export default function StudentDashboard() {
                   className="px-4 py-2 bg-blue-500 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 hover:shadow-blue-500/40 active:scale-95 transition"
                 >
                   Mua Lượt
+                </button>
+              </div>
+            </div>
+
+            {/* Item 11: Nước Tăng Lực Tri Thức */}
+            <div className="glass p-6 rounded-2xl border border-indigo-500/20 hover:border-indigo-500/40 transition-all duration-300 flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute -top-12 -right-12 w-24 h-24 bg-indigo-500/5 rounded-full group-hover:scale-150 transition-transform duration-500" />
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="p-3 bg-indigo-500/10 rounded-xl text-indigo-500">
+                    <Zap className="w-6 h-6 animate-pulse" />
+                  </span>
+                  <span className="px-3 py-1 bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 rounded-full text-xs font-bold">
+                    Buff Kinh Nghiệm
+                  </span>
+                </div>
+                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Nước Tăng Lực Tri Thức (x2 XP)</h4>
+                <p className="text-xs opacity-70 mb-4 min-h-[40px]">
+                  Kích hoạt trạng thái x2 XP mọi hoạt động trong vòng 15 phút.
+                </p>
+                <div className="mt-2 mb-4">
+                   <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
+                      {user?.doubleXPUntil && user.doubleXPUntil > Date.now() 
+                        ? `Còn ${Math.ceil((user.doubleXPUntil - Date.now()) / 60000)} phút` 
+                        : "Chưa Kích Hoạt"}
+                   </p>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
+                <span className="font-extrabold text-base text-indigo-600 dark:text-indigo-400">250 Tinh Hoa</span>
+                <button
+                  onClick={async () => {
+                    if (user && user.points < 250) {
+                      alert("Thiếu 250 Tinh Hoa rồi!");
+                      return;
+                    }
+                    if (user?.doubleXPUntil && user.doubleXPUntil > Date.now()) {
+                      alert("Bạn đang trong trạng thái x2 XP rồi!");
+                      return;
+                    }
+                    if (!confirm("Xác nhận đổi 250 Tinh Hoa để nhận trạng thái x2 XP trong 15 phút?")) return;
+                    if (store.buyDoubleXP(250)) {
+                      alert("Đã uống nước tăng lực! X2 XP trong 15 phút bắt đầu!");
+                      setForceRender(prev => prev + 1);
+                    }
+                  }}
+                  disabled={user ? user.points < 250 : true}
+                  className="px-4 py-2 bg-indigo-500 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/40 active:scale-95 transition"
+                >
+                  Uống Ngay
+                </button>
+              </div>
+            </div>
+
+            {/* Item 12: Mặt Nạ Ẩn Danh */}
+            <div className="glass p-6 rounded-2xl border border-slate-500/20 hover:border-slate-500/40 transition-all duration-300 flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute -top-12 -right-12 w-24 h-24 bg-slate-500/5 rounded-full group-hover:scale-150 transition-transform duration-500" />
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="p-3 bg-slate-500/10 rounded-xl text-slate-500">
+                    <Ghost className="w-6 h-6 animate-pulse" />
+                  </span>
+                  <span className="px-3 py-1 bg-slate-500/20 text-slate-700 dark:text-slate-300 rounded-full text-xs font-bold">
+                    Tàng Hình
+                  </span>
+                </div>
+                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Mặt Nạ Ẩn Danh</h4>
+                <p className="text-xs opacity-70 mb-4 min-h-[40px]">
+                  Ẩn giấu điểm số và hạng của bạn trên Bảng Xếp Hạng trong 24 giờ. Hiển thị dưới tên 'Kẻ Ẩn Danh'.
+                </p>
+                <div className="mt-2 mb-4">
+                   <p className="text-xs font-bold text-slate-600 dark:text-slate-400">
+                      {user?.hideRankUntil && user.hideRankUntil > Date.now() 
+                        ? `Ẩn trong ${Math.ceil((user.hideRankUntil - Date.now()) / 3600000)} giờ nữa` 
+                        : "Chưa Kích Hoạt"}
+                   </p>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
+                <span className="font-extrabold text-base text-slate-600 dark:text-slate-400">200 Tinh Hoa</span>
+                <button
+                  onClick={async () => {
+                    if (user && user.points < 200) {
+                      alert("Thiếu 200 Tinh Hoa rồi!");
+                      return;
+                    }
+                    if (user?.hideRankUntil && user.hideRankUntil > Date.now()) {
+                      alert("Bạn đã ẩn danh rồi!");
+                      return;
+                    }
+                    if (!confirm("Xác nhận đổi 200 Tinh Hoa để tàng hình trên Leaderboard trong 24 giờ?")) return;
+                    if (store.buyHideRank(200)) {
+                      alert("Che giấu hành tung thành công! Bạn đã biến mất khỏi bảng xếp hạng.");
+                      setForceRender(prev => prev + 1);
+                    }
+                  }}
+                  disabled={user ? user.points < 200 : true}
+                  className="px-4 py-2 bg-slate-500 text-white rounded-xl text-xs font-bold shadow-md shadow-slate-500/20 hover:shadow-slate-500/40 active:scale-95 transition"
+                >
+                  Đeo Mặt Nạ
+                </button>
+              </div>
+            </div>
+
+            {/* Item 13: Quyền Trượng Đấng Toàn Năng (Role Admin) */}
+            <div className="glass p-6 rounded-2xl border border-red-500/30 hover:border-red-500/60 transition-all duration-300 flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute -top-12 -right-12 w-24 h-24 bg-red-500/10 rounded-full group-hover:scale-150 transition-transform duration-500" />
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="p-3 bg-red-600/20 rounded-xl text-red-600">
+                    <ShieldAlert className="w-6 h-6 animate-pulse" />
+                  </span>
+                  <span className="px-3 py-1 bg-red-600/20 text-red-800 dark:text-red-300 rounded-full text-xs font-black">
+                    Thống Khổ
+                  </span>
+                </div>
+                <h4 className="text-lg font-black mb-1 text-red-700 dark:text-red-400">Quyền Trượng Đấng Toàn Năng</h4>
+                <p className="text-xs opacity-80 mb-4 min-h-[40px] text-red-900/80 dark:text-red-200/80 font-medium">
+                  Đổi lấy quyền năng tạo hóa (Admin Role). Giá: 99 Tỷ Tinh Hoa.
+                </p>
+              </div>
+              <div className="mt-4 pt-4 border-t border-red-200/50 dark:border-red-900/50 flex items-center justify-between">
+                <span className="font-extrabold text-[12px] text-red-600 dark:text-red-400 leading-tight">99,999,999,999 Tinh Hoa</span>
+                <button
+                  onClick={async () => {
+                    const cost = 99999999999;
+                    if (user && user.points < cost) {
+                      alert("Ngươi chưa đủ tư cách để chạm vào quyền trượng!");
+                      return;
+                    }
+                    if (user?.role === "Admin" || user?.role === "admin") {
+                      alert("Ngài đã là đấng toàn năng rồi!");
+                      return;
+                    }
+                    if (!confirm("Một sự đánh đổi khủng khiếp. Xác nhận lấy Quyền Trượng Đấng Toàn Năng?")) return;
+                    if (store.buyAdminRole(cost)) {
+                      alert("Trời đất rung chuyển! Chào mừng đấng sáng thế mới xuất hiện!");
+                      window.location.reload();
+                    }
+                  }}
+                  disabled={user ? user.points < 99999999999 : true}
+                  className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-900 text-white rounded-xl text-xs font-black shadow-lg shadow-red-500/30 hover:shadow-red-500/60 transition"
+                >
+                  Đoạt Nghịch
                 </button>
               </div>
             </div>
@@ -3384,7 +3735,7 @@ export default function StudentDashboard() {
               
               const AVAILABLE_BORDERS = BORDERS;
               
-              const unlockedTitles = getUnlockedTitles(xpInfo.currentLevel, user.title);
+              const unlockedTitles = getUnlockedTitles(xpInfo.currentLevel, user.title, user.unlockedCustomTitles || []);
 
               const updateProfileField = async (field: "title" | "avatarBorder", value: string) => {
                 try {

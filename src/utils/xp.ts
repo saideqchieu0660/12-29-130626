@@ -8,13 +8,17 @@ export const ALL_TITLES = [
   { id: "Chân Lý Logos", levelReq: 30, desc: "Đạt cấp 30. Nắm giữ kiến thức cốt lõi, thấu hiểu mọi lăng kính của vũ trụ." },
   { id: "Quân Vương Triết Học", isCustom: true, desc: "Danh hiệu bí ẩn, siêu hiếm. Đổi thưởng từ Agora với mức giá đắt đỏ. Hiệu ứng: Chân lý 7 màu luân hồi." },
   { id: "Thủ Lĩnh Sparta", isCustom: true, desc: "Danh hiệu bất bại, độc nhất vô nhị. Đấu Trường vinh danh. Hiệu ứng: Ngọc lục bảo chiến thần." },
+  { id: "Học Giả Bách Khoa", isCustom: true, desc: "Phong hiệu danh giá mua từ Agora. Vàng kim chói lọi rực rỡ." },
 ];
 
-export const getUnlockedTitles = (level: number, currentTitle?: string) => {
+export const getUnlockedTitles = (level: number, currentTitle?: string, unlockedCustomTitles: string[] = []) => {
   const titles = ALL_TITLES.filter(t => !t.isCustom && level >= t.levelReq).map(t => t.id);
   if (currentTitle && ALL_TITLES.find(t => t.isCustom && t.id === currentTitle)) {
     if (!titles.includes(currentTitle)) titles.push(currentTitle);
   }
+  unlockedCustomTitles.forEach(t => {
+    if (!titles.includes(t)) titles.push(t);
+  });
   return titles;
 };
 
@@ -84,6 +88,9 @@ export const getCustomTitleTextClass = (title?: string, fallbackClass?: string) 
   if (title === "Thủ Lĩnh Sparta") {
     return "text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-emerald-500 font-black drop-shadow-sm";
   }
+  if (title === "Học Giả Bách Khoa") {
+    return "text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-600 font-black drop-shadow-sm";
+  }
   return title ? "text-amber-600 dark:text-amber-400 font-bold" : (fallbackClass || "");
 };
 
@@ -109,6 +116,9 @@ export const getCustomTitleBadgeClass = (title?: string, fallbackClass?: string)
   }
   if (title === "Thủ Lĩnh Sparta") {
     return "bg-emerald-950 text-emerald-400 font-black ring-2 ring-yellow-500/50 shadow-[0_0_15px_rgba(16,185,129,0.3)]";
+  }
+  if (title === "Học Giả Bách Khoa") {
+    return "bg-amber-950 text-amber-400 font-black ring-2 ring-yellow-500/80 shadow-[0_0_20px_rgba(245,158,11,0.4)]";
   }
   return title ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold" : (fallbackClass || "");
 };

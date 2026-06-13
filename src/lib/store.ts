@@ -11,17 +11,23 @@ export interface User {
   streak?: number;
   lastActiveDate?: string;
   streakFreeze?: boolean;
+  streakFreezeCount?: number;
   isAnonymous?: boolean;
   status?: string;
   isPro?: boolean;
   isSchoolLover?: boolean;
   lastWeeklyResetWeek?: string; // Track which ISO calendar week they reset on
   
+  doubleXPUntil?: number; // Timestamp for when the double XP ends
+  hideRankUntil?: number; // Timestamp for when the anonymous rank mask ends
+  
   // Profile UI Upgrades (Optional Fallbacks)
   level?: number;
   avatarBorder?: string;
   photoURL?: string;
   title?: string;
+  unlockedCustomTitles?: string[];
+  unlockedCustomBorders?: string[];
   
   averageMastery?: number; // Real-time overall average learning mastery (0 - 100)
   top1Weeks?: number; // Số tuần ngự trị ngôi vương Top 1
@@ -301,11 +307,16 @@ export async function syncUserToFirebase() {
         streak: currentUser.streak || 1,
         lastActiveDate: currentUser.lastActiveDate || new Date().toISOString().split('T')[0],
         streakFreeze: !!currentUser.streakFreeze,
+        streakFreezeCount: currentUser.streakFreezeCount || 0,
         isAnonymous: auth.currentUser?.isAnonymous || false,
         isSchoolLover: !!currentUser.isSchoolLover,
+        doubleXPUntil: currentUser.doubleXPUntil || 0,
+        hideRankUntil: currentUser.hideRankUntil || 0,
         level: currentUser.level || 1,
         avatarBorder: currentUser.avatarBorder || "none",
         title: currentUser.title || "",
+        unlockedCustomTitles: currentUser.unlockedCustomTitles || [],
+        unlockedCustomBorders: currentUser.unlockedCustomBorders || [],
         photoURL: currentUser.photoURL || "",
         ...(currentUser.activeChallenge && { activeChallenge: currentUser.activeChallenge }),
         ...(currentUser.unitedEngineUses !== undefined && { unitedEngineUses: currentUser.unitedEngineUses })
@@ -367,6 +378,8 @@ export const store = {
             if (profile.title) u.title = profile.title;
             if (profile.avatarBorder) u.avatarBorder = profile.avatarBorder;
             if (profile.photoURL) u.photoURL = profile.photoURL;
+            if (profile.unlockedCustomTitles) u.unlockedCustomTitles = profile.unlockedCustomTitles;
+            if (profile.unlockedCustomBorders) u.unlockedCustomBorders = profile.unlockedCustomBorders;
             
             // Calendric Weekly Points Reset Check
             const currentWeek = getISOWeekId();
@@ -393,6 +406,9 @@ export const store = {
             if (typeof profile.streak === 'number') u.streak = profile.streak;
             if (profile.lastActiveDate) u.lastActiveDate = profile.lastActiveDate;
             if (typeof profile.streakFreeze === 'boolean') u.streakFreeze = profile.streakFreeze;
+            if (typeof profile.streakFreezeCount === 'number') u.streakFreezeCount = profile.streakFreezeCount;
+            if (typeof profile.doubleXPUntil === 'number') u.doubleXPUntil = profile.doubleXPUntil;
+            if (typeof profile.hideRankUntil === 'number') u.hideRankUntil = profile.hideRankUntil;
         } else {
             // Chưa có profile trên firestore, lưu quả profile mặc định đầu tiên lên (chỉ người dùng thật)
             if (!firebaseUser.isAnonymous) {
@@ -405,6 +421,9 @@ export const store = {
                  streak: u.streak,
                  lastActiveDate: u.lastActiveDate,
                  streakFreeze: !!u.streakFreeze,
+                 streakFreezeCount: u.streakFreezeCount || 0,
+                 doubleXPUntil: u.doubleXPUntil || 0,
+                 hideRankUntil: u.hideRankUntil || 0,
                  isAnonymous: false,
                  isPro: !!u.isPro,
                  lastWeeklyResetWeek: currentWeek
@@ -734,10 +753,12 @@ export const store = {
       saveLocalUserDecks();
     }
   },
-  buyStreakFreeze: (customPrice: number = 400) => {
-    if (currentUser && currentUser.points >= customPrice && !currentUser.streakFreeze) {
-      currentUser.points -= customPrice;
+  buyStreakFreeze: (customPrice?: number) => {
+    const price = customPrice !== undefined ? customPrice : 400 * Math.pow(2, currentUser?.streakFreezeCount || 0);
+    if (currentUser && currentUser.points >= price && !currentUser.streakFreeze) {
+      currentUser.points -= price;
       currentUser.streakFreeze = true;
+      currentUser.streakFreezeCount = (currentUser.streakFreezeCount || 0) + 1;
       syncUserToFirebase();
       return true;
     }
@@ -762,9 +783,37 @@ export const store = {
     }
     return false;
   },
+  buyDoubleXP: (price: number = 250) => {
+    if (currentUser && currentUser.points >= price) {
+      currentUser.points -= price;
+      currentUser.doubleXPUntil = Date.now() + 15 * 60 * 1000;
+      syncUserToFirebase();
+      return true;
+    }
+    return false;
+  },
+  buyHideRank: (price: number = 200) => {
+    if (currentUser && currentUser.points >= price) {
+      currentUser.points -= price;
+      currentUser.hideRankUntil = Date.now() + 24 * 60 * 60 * 1000;
+      syncUserToFirebase();
+      return true;
+    }
+    return false;
+  },
+  buyAdminRole: (price: number = 99999999999) => {
+    if (currentUser && currentUser.points >= price) {
+      currentUser.points -= price;
+      currentUser.role = "Admin";
+      syncUserToFirebase();
+      return true;
+    }
+    return false;
+  },
   addBonusPoints: (points: number) => {
     if (currentUser) {
-        currentUser.points += points;
+        const isDoubleXP = currentUser.doubleXPUntil && currentUser.doubleXPUntil > Date.now();
+        currentUser.points += isDoubleXP ? points * 2 : points;
         syncUserToFirebase();
     }
   },
@@ -801,7 +850,8 @@ export const store = {
          card.mastery = Math.min(100, card.mastery + 20);
          card.isHard = false;
          if (currentUser) {
-             currentUser.points += 1;
+             const isDoubleXP = currentUser.doubleXPUntil && currentUser.doubleXPUntil > Date.now();
+             currentUser.points += isDoubleXP ? 2 : 1;
          }
      } else {
          rep = 0;
