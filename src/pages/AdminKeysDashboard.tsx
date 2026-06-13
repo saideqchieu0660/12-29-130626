@@ -1481,8 +1481,8 @@ export default function AdminKeysDashboard() {
   useEffect(() => {
     const user = store.getCurrentUser();
     if (user?.role === "teacher" || user?.role === "admin" || user?.role === "Admin") {
-      const storedKey = (import.meta as any).env?.VITE_ADMIN_KEY || "seneca";
-      setAdminKey(storedKey);
+      const storedKey = localStorage.getItem("henosis_admin_key") || "";
+      if (storedKey) setAdminKey(storedKey);
       setIsAuthenticated(true);
     }
   }, []);
@@ -1527,7 +1527,7 @@ export default function AdminKeysDashboard() {
               <Key className="w-8 h-8 text-amber-500" />
             </div>
             <h1 className="text-2xl font-display font-bold">Admin Portal</h1>
-            <p className="text-stone-500 dark:text-stone-400 text-sm mt-1">Requires VITE_ADMIN_KEY</p>
+            <p className="text-stone-500 dark:text-stone-400 text-sm mt-1">Requires Admin Key</p>
           </div>
           
           <form onSubmit={handleLogin} className="space-y-4">

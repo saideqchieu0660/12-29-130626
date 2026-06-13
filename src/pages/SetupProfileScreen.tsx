@@ -123,11 +123,27 @@ export default function SetupProfileScreen() {
         await updatePassword(user, password);
       }
 
-      const correctAdminKey = import.meta.env.VITE_ADMIN_KEY;
-      const proKey = import.meta.env.VITE_PRO || "seneca_pro";
-      const isTeacher = adminKey === correctAdminKey;
-      const isPro = adminKey === proKey;
-      const role = isTeacher ? "Admin" : "student";
+      let role = "student";
+      let isPro = false;
+      let isTeacher = false;
+      
+      if (adminKey) {
+          try {
+              const verifyRes = await fetch('/api/auth/escalate-role', {
+                 method: 'POST',
+                 headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify({ uid: user.uid, providedKey: adminKey })
+              }).then(res => res.json());
+
+              if (verifyRes.success) {
+                  if (verifyRes.role === "Admin") {
+                      isTeacher = true;
+                      role = "Admin";
+                  }
+                  if (verifyRes.isPro) isPro = true;
+              }
+          } catch(e) {}
+      }
 
       await dbService.updateUserProfile(user.uid, {
         name: username.trim(),

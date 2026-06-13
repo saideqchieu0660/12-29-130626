@@ -9,8 +9,8 @@ const BADGES = [
   // 1. CHUỖI KHỔ TU (STREAK - Đăng nhập liên tiếp)
   {
     id: 'streak_3',
-    name: 'Khởi Hành Đắc Đạo',
-    desc: 'Chuỗi 3 ngày liên tiếp tinh tấn',
+    name: 'Tia Sáng Động Thạch',
+    desc: 'Chuỗi 3 ngày liên tiếp kiên trì học hỏi',
     req: 3,
     icon: Compass,
     color: 'text-sky-500',
@@ -23,7 +23,7 @@ const BADGES = [
   },
   {
     id: 'streak_5',
-    name: 'Ngưng Khí Đan Điền',
+    name: 'Khởi Sinh Tư Duy',
     desc: 'Bền vững tinh thần chuỗi 5 ngày đột phá',
     req: 5,
     icon: Flame,
@@ -33,11 +33,11 @@ const BADGES = [
     gradient: 'from-amber-500/20 to-yellow-500/5',
     type: 'streak' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Hồi 20% Thể Lực Hàng Ngày'
+    reward: '✨ Hồi 20% Năng lượng tinh thần'
   },
   {
     id: 'week_warrior',
-    name: 'Chiến Binh Trúc Cơ',
+    name: 'Chiến Binh Phalanx',
     desc: 'Chuỗi 7 ngày thiền định không đứt',
     req: 7,
     icon: Flame,
@@ -51,8 +51,8 @@ const BADGES = [
   },
   {
     id: 'streak_10',
-    name: 'Ý Chí Bàn Thạch',
-    desc: 'Kỷ luật bẻ gãy lười biếng chuỗi 10 ngày',
+    name: 'Ý Chí Khắc Kỷ',
+    desc: 'Kỷ luật của bậc hiền triết suốt 10 ngày',
     req: 10,
     icon: Shield,
     color: 'text-yellow-500',
@@ -61,12 +61,12 @@ const BADGES = [
     gradient: 'from-yellow-500/20 to-amber-500/5',
     type: 'streak' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Thưởng Thêm Dan Dược Động Lực'
+    reward: '✨ Nhận Vòng Nguyệt Quế Tinh Thần'
   },
   {
     id: 'streak_15',
-    name: 'Kim Đan Chân Nhân',
-    desc: 'Chuỗi 15 ngày trường kỳ tu luyện',
+    name: 'Học Giả Học Viện',
+    desc: 'Chuỗi 15 ngày trường kỳ tích lũy',
     req: 15,
     icon: Shield,
     color: 'text-rose-500',
@@ -75,12 +75,12 @@ const BADGES = [
     gradient: 'from-rose-500/20 to-orange-500/5',
     type: 'streak' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Nhận Thần Phù Tăng Tốc Học'
+    reward: '✨ Nhận Phước Lành Tốc Độ Thấu Hiểu'
   },
   {
     id: 'monthly_sage',
-    name: 'Nguyên Anh Sư Tổ',
-    desc: 'Bền bỉ tu hành quá 30 ngày đêm',
+    name: 'Hậu Duệ Socrates',
+    desc: 'Bền bỉ học vấn quá 30 ngày đêm',
     req: 30,
     icon: Calendar,
     color: 'text-indigo-500',
@@ -90,12 +90,12 @@ const BADGES = [
     type: 'streak' as const,
     span: 'col-span-2 sm:col-span-2 md:col-span-2 md:row-span-2 min-h-[15.5rem]',
     isVip: true,
-    reward: '🔥 Danh xưng Sư Tổ, x1.5 Đan Dược Thưởng'
+    reward: '🔥 Danh xưng Hậu Duệ, x1.5 Quả Ngọt'
   },
   {
     id: 'streak_50',
-    name: 'Hóa Thần Supreme',
-    desc: 'Chuỗi 50 ngày kiên trì rúng động tiên tông',
+    name: 'Bán Thần Kiến Tạo',
+    desc: 'Chuỗi 50 ngày kiên trì rung động Olympus',
     req: 50,
     icon: Award,
     color: 'text-purple-400',
@@ -105,12 +105,12 @@ const BADGES = [
     type: 'streak' as const,
     span: 'col-span-2 min-h-[12.5rem]',
     isVip: true,
-    reward: '🔥 Vương Quy Khung Động Càn Khôn'
+    reward: '🔥 Nhận Tượng Tinh Thần Bất Diệt'
   },
   {
     id: 'streak_100',
-    name: 'Đại Phá Hư Không',
-    desc: 'Chuỗi 100 ngày khổ luyện đạt quả vị thần tiên',
+    name: 'Vươn Tới Đỉnh Cực',
+    desc: 'Chuỗi 100 ngày vượt qua mọi giới hạn con người',
     req: 100,
     icon: Crown,
     color: 'text-pink-500',
@@ -120,14 +120,14 @@ const BADGES = [
     type: 'streak' as const,
     span: 'col-span-2 sm:col-span-2 md:col-span-4 min-h-[12.5rem]',
     isVip: true,
-    reward: '🔥 Nhất Đại Tông Sư Vô Song Điện'
+    reward: '🔥 Sở hữu Vương Trượng của Zeus'
   },
 
   // 2. LINH THẠCH TÍCH LŨY (XP / Points)
   {
     id: 'points_100',
-    name: 'Tân Binh Đạo Hữu',
-    desc: 'Đột phá tích lũy 100 Tinh Hoa',
+    name: 'Dân Tự Do Mới',
+    desc: 'Đột phá tích lũy 100 Tinh Hoa tri thức',
     req: 100,
     icon: Book,
     color: 'text-blue-500',
@@ -140,7 +140,7 @@ const BADGES = [
   },
   {
     id: 'points_300',
-    name: 'Linh Thừa Đủ Đầy',
+    name: 'Hạt Giống Trí Tuệ',
     desc: 'Gom góp tích lũy 300 Tinh Hoa tinh khiết',
     req: 300,
     icon: Star,
@@ -150,11 +150,11 @@ const BADGES = [
     gradient: 'from-cyan-400/20 to-blue-500/5',
     type: 'points' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Thưởng x1.1 Tinh Hoa hồi đoái'
+    reward: '✨ Thưởng x1.1 năng suất gặt hái'
   },
   {
     id: 'knowledge_seeker',
-    name: 'Phú Hộ Động Thiên',
+    name: 'Nhà Khảo Cổ',
     desc: 'Đột phá tích lũy 500 Tinh Hoa dồi dào',
     req: 500,
     icon: Star,
@@ -164,12 +164,12 @@ const BADGES = [
     gradient: 'from-yellow-400/20 to-orange-600/5',
     type: 'points' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Tặng Khí Hải Tiên Ấn khởi đầu'
+    reward: '✨ Tặng Bản đồ Di Cáo Cổ Đại'
   },
   {
     id: 'scholar',
-    name: 'Tông Môn Phú Giáp',
-    desc: 'Giữ mực đạt tới 1,000 Tinh Hoa',
+    name: 'Trụ Cột Thư Viện',
+    desc: 'Đạt tới 1,000 Tinh Hoa khai mở kho báu',
     req: 1000,
     icon: Award,
     color: 'text-emerald-500',
@@ -179,11 +179,11 @@ const BADGES = [
     type: 'points' as const,
     span: 'col-span-2 sm:col-span-2 md:col-span-2 md:row-span-2 min-h-[15.5rem]',
     isVip: true,
-    reward: '🔥 Khung viền Kim Long & Sắc sắc Tiên Đồng'
+    reward: '🔥 Khung viền Cây Oliu & Giấy Trắng'
   },
   {
     id: 'points_2000',
-    name: 'Huyền Thông Đạo Nhân',
+    name: 'Trưởng Tế Tri Thức',
     desc: 'Trí tuệ đạt tới 2,000 Tinh Hoa thăng cấp vinh dự',
     req: 2000,
     icon: Medal,
@@ -193,11 +193,11 @@ const BADGES = [
     gradient: 'from-rose-500/20 to-pink-500/10',
     type: 'points' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Sát hào văn ngọc bích quanh thần'
+    reward: '✨ Hào quang thông thái bảo mẫu vây quanh'
   },
   {
     id: 'ai_master',
-    name: 'Bậc Thầy Huyền Cơ',
+    name: 'Bậc Thầy Kiến Tạo',
     desc: 'Hiển danh sở hữu 2,500 Tinh Hoa',
     req: 2500,
     icon: Cpu,
@@ -208,11 +208,11 @@ const BADGES = [
     type: 'points' as const,
     span: 'col-span-2 sm:col-span-3 md:col-span-2 min-h-[12.5rem]',
     isVip: true,
-    reward: '🔥 Mở khóa danh hiệu Cửu Thiên Trưởng Lão'
+    reward: '🔥 Mở khóa danh hiệu Viện Trưởng Tiềm Năng'
   },
   {
     id: 'stoic',
-    name: 'Triết Gia Tối Thượng',
+    name: 'Triết Gia Khai Sáng',
     desc: 'Nỗ lực đỉnh cao gom 5,000 Tinh Hoa',
     req: 5000,
     icon: Shield,
@@ -238,14 +238,14 @@ const BADGES = [
     type: 'points' as const,
     span: 'col-span-2 sm:col-span-4 min-h-[12.5rem]',
     isVip: true,
-    reward: '🔥 Tượng Vàng Thần Tiên Tông tạc Thần Tháp'
+    reward: '🔥 Tạc Tượng Parthenon Vinh Quang'
   },
 
   // 3. THỜI GIAN KHỔ LUYỆN TRONG TUẦN (TIME - Số phút học tập trong tuần)
   {
     id: 'time_15',
-    name: 'Hồn Luyện Sơ Đạo',
-    desc: 'Tích lũy 15 phút tu hành tuần này',
+    name: 'Khởi Điểm Suy Ngẫm',
+    desc: 'Tích lũy 15 phút rèn luyện tư duy tuần này',
     req: 15,
     icon: Clock,
     color: 'text-emerald-400',
@@ -254,12 +254,12 @@ const BADGES = [
     gradient: 'from-emerald-400/20 to-teal-400/5',
     type: 'time' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Tặng 30 Thạch Động Viên'
+    reward: '✨ Tặng 30 Phiến Đá Rèn Tư Duy'
   },
   {
     id: 'time_30',
-    name: 'Hành Giả Khởi Hành',
-    desc: 'Tích lũy 30 phút luyện thiền trí tuệ',
+    name: 'Hành Giả Khảo Sát',
+    desc: 'Tích lũy 30 phút nghiên cứu chiều sâu',
     req: 30,
     icon: Hourglass,
     color: 'text-sky-400',
@@ -268,12 +268,12 @@ const BADGES = [
     gradient: 'from-sky-400/20 to-cyan-500/5',
     type: 'time' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Thưởng +20 Điểm Kinh Nghiệm'
+    reward: '✨ Thưởng +20 Điểm Tích Lũy Bền Bỉ'
   },
   {
     id: 'time_60',
-    name: 'Nhất Tâm Trực Chỉ',
-    desc: 'Tích lũy 60 phút tu hành bứt phá',
+    name: 'Thiền Sư Chánh Niệm',
+    desc: 'Tích lũy 60 phút tập trung cao độ',
     req: 60,
     icon: Hourglass,
     color: 'text-amber-500',
@@ -282,12 +282,12 @@ const BADGES = [
     gradient: 'from-amber-500/20 to-rose-450/5',
     type: 'time' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Trận pháp rèn luyện tập trung +20%'
+    reward: '✨ Ý chí tập trung +20%'
   },
   {
     id: 'time_120',
-    name: 'Hóa Cảnh Huyền Đồng',
-    desc: 'Bền bỉ tu văn 120 phút (2 tiếng) không ngừng nghỉ',
+    name: 'Nhà Khởi xướng',
+    desc: 'Bền bỉ nghiên cứu 120 phút (2 tiếng) tuần này',
     req: 120,
     icon: Activity,
     color: 'text-emerald-450',
@@ -296,12 +296,12 @@ const BADGES = [
     gradient: 'from-emerald-450/20 to-green-500/5',
     type: 'time' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Pháp bảo Định Tâm hỗ trợ tịnh tâm'
+    reward: '✨ Chiếc lá Oliu Trí Tuệ hỗ trợ tịnh tâm'
   },
   {
     id: 'time_180',
-    name: 'Bế Quan Đàn Chỉ',
-    desc: 'Đạt tới 3 tiếng (180 phút) khổ luyện tuần này',
+    name: 'Ẩn Sĩ Biện Chứng',
+    desc: 'Đạt tới 3 tiếng (180 phút) mài giũa tuần này',
     req: 180,
     icon: Activity,
     color: 'text-violet-500',
@@ -310,12 +310,12 @@ const BADGES = [
     gradient: 'from-violet-500/20 to-indigo-500/5',
     type: 'time' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Sắc phong "Thần Hành Tiên Khách"'
+    reward: '✨ Sắc phong "Kẻ Du Hành Kỷ Nguyên"'
   },
   {
     id: 'time_300',
-    name: 'Thượng Linh Bất Tử',
-    desc: 'Vượt mốc 5 tiếng (300 phút) đại lực ôn văn',
+    name: 'Người Kế Thừa Bất Diệt',
+    desc: 'Vượt mốc 5 tiếng (300 phút) năng lượng dồi dào',
     req: 300,
     icon: Zap,
     color: 'text-rose-400',
@@ -325,12 +325,12 @@ const BADGES = [
     type: 'time' as const,
     span: 'col-span-1 min-h-[12.5rem]',
     isVip: true,
-    reward: '🔥 Vinh danh Tiên Sách Đệ Nhất Khổ Tu'
+    reward: '🔥 Vinh danh Người Sáng Thế Kỷ Nguyên'
   },
   {
     id: 'time_600',
-    name: 'Hữu Đạo Chân Nhân',
-    desc: 'Kỷ lục 10 tiếng (600 phút) đại bão học tập tột bực',
+    name: 'Kho Tàng Hùng Biện',
+    desc: 'Kỷ lục 10 tiếng (600 phút) nỗ lực phi thường',
     req: 600,
     icon: Cpu,
     color: 'text-fuchsia-400',
@@ -340,13 +340,13 @@ const BADGES = [
     type: 'time' as const,
     span: 'col-span-2 min-h-[12.5rem]',
     isVip: true,
-    reward: '🔥 Bảo khí Tái Tạo Ngộ Tính Chân Truyền x2'
+    reward: '🔥 Tặng thêm Điểm Tích Cực x2'
   },
 
   // 4. NGỰ TRỊ NGÔI VƯƠNG (TOP 1 BXH TUẦN)
   {
     id: 'top1_1',
-    name: 'Độc Bộ Thiên Hạ',
+    name: 'Người Chiến Thắng',
     desc: 'Cất bước ngự trị vị thế Top 1 BXH Tuần',
     req: 1,
     icon: Trophy,
@@ -356,11 +356,11 @@ const BADGES = [
     gradient: 'from-amber-400/20 to-yellow-600/5',
     type: 'top1' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Sắc sắc tôn vinh Hào Quang Độc Bộ'
+    reward: '✨ Sắc phong Hào Quang Của Nike'
   },
   {
     id: 'top1_2',
-    name: 'Song Phụng Quy Sào',
+    name: 'Lưỡng Cực Quyền Năng',
     desc: 'Tiếp tục rực cháy ngự trị vị trí Top 1 đỉnh cao 2 tuần',
     req: 2,
     icon: Medal,
@@ -370,12 +370,12 @@ const BADGES = [
     gradient: 'from-pink-400/20 to-orange-400/5',
     type: 'top1' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Sát chiêu tiên quang tỏa hào phong quang'
+    reward: '✨ Ánh sáng thái dương chói lọi'
   },
   {
     id: 'top1_3',
-    name: 'Tam Thiên Vương Giả',
-    desc: 'Sừng sững 3 tuần bế quan ngôi hoàng kim Top 1',
+    name: 'Tam Vị Quyền Uy',
+    desc: 'Sừng sững 3 tuần bảo vệ ngôi hoàng kim Top 1',
     req: 3,
     icon: Crown,
     color: 'text-yellow-400',
@@ -388,8 +388,8 @@ const BADGES = [
   },
   {
     id: 'top1_5',
-    name: 'Ngũ Hành Thần Thống',
-    desc: 'Bất biến 5 tuần liên tục thống soái đỉnh vô thượng Top 1',
+    name: 'Ngũ Giác Cầm Quyền',
+    desc: 'Bất biến 5 tuần liên tục bước lên đỉnh Olympus',
     req: 5,
     icon: Trophy,
     color: 'text-orange-400',
@@ -399,12 +399,12 @@ const BADGES = [
     type: 'top1' as const,
     span: 'col-span-1 min-h-[12.5rem]',
     isVip: true,
-    reward: '🔥 Huy hiệu Thất Đại Thần Thông tiên thánh'
+    reward: '🔥 Huy hiệu Hóa Thân Thần Thánh'
   },
   {
     id: 'top1_10',
-    name: 'Vạn Cổ Đệ Nhất Đế',
-    desc: 'Khắc cốt vương đại thống lĩnh BXH Top 1 rực rỡ suốt 10 tuần',
+    name: 'Đế Vương Của Các Thế Kỷ',
+    desc: 'Khắc cốt vương đại thống lĩnh BXH Top 1 suốt 10 tuần',
     req: 10,
     icon: Crown,
     color: 'text-yellow-400',
@@ -414,13 +414,13 @@ const BADGES = [
     type: 'top1' as const,
     span: 'col-span-2 sm:col-span-2 md:col-span-4 min-h-[12.5rem]',
     isVip: true,
-    reward: '🔥 Sắc Miện Thống Trị Tiên Cảnh Vô Biên Vĩnh Dạ'
+    reward: '🔥 Tạc danh vào Đế Cung Ánh Sáng'
   },
 
   // 5. NGỘ TÍNH BÌNH QUÂN (AVERAGE MASTERY - Mức độ thông thạo trung bình)
   {
     id: 'mastery_50',
-    name: 'Giác Ngộ Sơ Khai',
+    name: 'Giác Ngộ Tân Tiến',
     desc: 'Thuộc lĩnh độ thông thạo trung bình >= 50%',
     req: 50,
     icon: Medal,
@@ -434,8 +434,8 @@ const BADGES = [
   },
   {
     id: 'mastery_80',
-    name: 'Đăng Phong Tạo Cực',
-    desc: 'Độ thông thạo trung bình hoàn mỹ >= 80%',
+    name: 'Điêu Khắc Sự Hoàn Mỹ',
+    desc: 'Độ thông thạo trung bình chạm đích >= 80%',
     req: 80,
     icon: Star,
     color: 'text-cyan-400',
@@ -448,8 +448,8 @@ const BADGES = [
   },
   {
     id: 'mastery_95',
-    name: 'Thần Thông Quảng Đại',
-    desc: 'Ngự trị trí tuệ siêu việt >= 95% siêu quần',
+    name: 'Hiện Thân Sự Thông Thái',
+    desc: 'Trí lực siêu việt >= 95% đáng nể',
     req: 95,
     icon: Sparkles,
     color: 'text-fuchsia-500',
@@ -459,7 +459,7 @@ const BADGES = [
     type: 'mastery' as const,
     span: 'col-span-1 min-h-[12.5rem]',
     isVip: true,
-    reward: '🔥 Phong phong Đạo Sĩ Thần Thông Hạo Quang'
+    reward: '🔥 Hiện Thân Lời Quyết Từ Các Nữ Thần Số Mệnh'
   }
 ];
 
@@ -610,7 +610,7 @@ const BadgeCard = ({ badge, val, unlocked, progress }: any) => {
                  <div className="w-full space-y-3 mt-auto">
                     {badge.reward && (
                        <div className="text-[10px] lg:text-xs text-white/80 bg-white/10 p-2 rounded-lg border border-white/5 backdrop-blur-sm italic">
-                          Huyền Thiết Phần Thưởng:<br/>
+                          Đặc quyền Vinh Dự:<br/>
                           <span className="font-bold text-yellow-400">{badge.reward}</span>
                        </div>
                     )}
@@ -625,7 +625,7 @@ const BadgeCard = ({ badge, val, unlocked, progress }: any) => {
                                : "bg-stone-700 text-stone-400 cursor-not-allowed"
                           )}
                         >
-                           {unlocked ? <><Zap className="w-3.5 h-3.5"/> Nhận Lộc</> : <><Lock className="w-3.5 h-3.5"/> Chưa Đạt</>}
+                           {unlocked ? <><Zap className="w-3.5 h-3.5"/> Nhận Thưởng</> : <><Lock className="w-3.5 h-3.5"/> Chưa Đạt</>}
                         </button>
 
                         {unlocked && (
@@ -731,7 +731,7 @@ export const StudentBadges = ({
             <h3 className="text-2xl md:text-3xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-amber-500 to-yellow-600 dark:from-amber-200 dark:via-yellow-400 dark:to-amber-500 flex items-center gap-3">
               <Award className="w-8 h-8 text-yellow-500" /> Điện Thờ Vinh Hiển
             </h3>
-            <p className="text-sm font-medium text-stone-500 dark:text-stone-400 italic">Mỗi danh hiệu đạt được chứng minh thực lực tu đạo dốc lòng của hành giả.</p>
+            <p className="text-sm font-medium text-stone-500 dark:text-stone-400 italic">Mỗi danh hiệu đạt được chứng minh nỗ lực tri thức phi thường.</p>
          </div>
 
          {/* Live stat grid */}
@@ -776,7 +776,7 @@ export const StudentBadges = ({
                Tỷ lệ mở khóa Điện Thờ: <span className="font-mono text-yellow-600 dark:text-yellow-400 font-extrabold">{totalUnlockedCount}</span> / {BADGES.length} danh hiệu ({totalPercent}%)
             </h4>
             <p className="text-xs text-stone-500 dark:text-stone-400 max-w-xl">
-               Hoàn thành xuất sắc toàn bộ chặng đường tu đạo huyền ảo để đạt danh vị "Khắc Kỷ Chi Thượng Thừa" đỉnh phong.
+               Hoàn thành xuất sắc toàn bộ chặng đường khảo cứu triết học để đạt danh vị "Khắc Kỷ Chi Thượng Thừa" đỉnh phong.
             </p>
          </div>
          <div className="w-full md:w-64">
@@ -857,7 +857,7 @@ export const StudentBadges = ({
                         {newlyUnlocked.name}
                      </h2>
                      <p className="text-stone-600 dark:text-stone-300 opacity-80 leading-relaxed text-sm">
-                        Hành giả chứng thống vinh diệu linh năng: <strong className={newlyUnlocked.color}>{newlyUnlocked.desc}</strong>!
+                        Bạn đã xuất sắc giành được danh hiệu danh giá: <strong className={newlyUnlocked.color}>{newlyUnlocked.desc}</strong>!
                      </p>
                      {newlyUnlocked.reward && (
                         <div className="border border-yellow-500/20 bg-yellow-500/5 p-2 rounded-lg mt-1 text-xs">
@@ -867,7 +867,7 @@ export const StudentBadges = ({
                   </div>
                   
                   <button onClick={closeModal} className="mt-4 px-6 py-3 bg-yellow-500 text-black font-bold rounded-xl hover:bg-yellow-600 transition hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(234,179,8,0.3)] w-full flex items-center justify-center gap-2">
-                     <Award className="w-5 h-5" /> Càn Khôn Đắc Đạo!
+                     <Award className="w-5 h-5" /> Vinh Danh Của Thánh Thần!
                   </button>
                </div>
             </div>

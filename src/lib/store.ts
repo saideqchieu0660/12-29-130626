@@ -580,8 +580,8 @@ export const store = {
     
     let role: Role = "student";
     let isPro = false;
-    const correctAdminKey = (import.meta as any).env?.VITE_ADMIN_KEY;
-    const proKey = (import.meta as any).env?.VITE_PRO || (import.meta as any).env?.PRO || "seneca_pro";
+    const correctAdminKey = "disabled_in_client_use_backend";
+    const proKey = "disabled_in_client_use_backend_pro";
     if (adminKey && adminKey === correctAdminKey) {
        role = "teacher";
     } else if (adminKey && adminKey === proKey) {
@@ -603,8 +603,8 @@ export const store = {
 
     if (u) {
        // if they provided correct admin key, upgrade them
-       const correctAdminKey = (import.meta as any).env?.VITE_ADMIN_KEY;
-       const proKey = (import.meta as any).env?.VITE_PRO || (import.meta as any).env?.PRO || "seneca_pro";
+       const correctAdminKey = "disabled_in_client_use_backend";
+       const proKey = "disabled_in_client_use_backend_pro";
        if (adminKey && adminKey === correctAdminKey) {
           u.role = "teacher";
        } else if (adminKey && adminKey === proKey) {

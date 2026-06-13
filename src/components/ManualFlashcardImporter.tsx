@@ -832,7 +832,7 @@ Acknowledge this protocol. Execute all text transformations deterministically at
 
   const getKeysStatus = async () => {
     try {
-      const adminKey = (import.meta as any).env?.VITE_ADMIN_KEY || "seneca";
+      const adminKey = localStorage.getItem("henosis_admin_key") || "";
       const res = await fetch("/api/admin/keys-status", {
         headers: { "x-admin-key": adminKey }
       });

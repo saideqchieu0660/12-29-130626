@@ -171,11 +171,16 @@ export default function TeacherDashboard() {
     };
   }, []);
 
-  const [adminKey, setAdminKey] = useState("");
+  const [adminKey, setAdminKeyState] = useState(localStorage.getItem("henosis_admin_key") || "");
+  const setAdminKey = (val: string) => {
+    setAdminKeyState(val);
+    localStorage.setItem("henosis_admin_key", val);
+  };
+
   useEffect(() => {
     if (user?.role === "teacher" || user?.role === "admin" || user?.role === "Admin") {
-      const storedKey = (import.meta as any).env?.VITE_ADMIN_KEY || "seneca";
-      setAdminKey(storedKey);
+      const storedKey = localStorage.getItem("henosis_admin_key") || "";
+      if (storedKey) setAdminKeyState(storedKey);
     }
   }, [user?.role]);
   

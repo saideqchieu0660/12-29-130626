@@ -59,29 +59,32 @@ export default function AuthScreen() {
           const { dbService } = await import('../lib/firebase');
           const profile = await dbService.getUserProfile(userCredential.user.uid);
           let assignedRole = profile?.role || "student";
-          const correctAdminKey = import.meta.env.VITE_ADMIN_KEY;
-          const proKey = import.meta.env.VITE_PRO || "seneca_pro";
           let isProUser = !!profile?.isPro;
 
-          if (adminKey && adminKey === proKey) {
-              isProUser = true;
+          if (adminKey) {
+              try {
+                  const verifyRes = await fetch('/api/auth/escalate-role', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ uid: userCredential.user.uid, providedKey: adminKey })
+                  }).then(res => res.json());
+
+                  if (verifyRes.success) {
+                      if (verifyRes.role) {
+                          assignedRole = verifyRes.role;
+                          sessionStorage.setItem('adminToken', 'true');
+                      }
+                      if (verifyRes.isPro) isProUser = true;
+                  }
+              } catch(e) {
+                  console.error('Role escalation failed', e);
+              }
           }
 
-          if (adminKey && adminKey === correctAdminKey) {
-              assignedRole = "Admin";
+          if (assignedRole === "Admin" || assignedRole === "admin" || assignedRole === "teacher") {
               sessionStorage.setItem('adminToken', 'true');
-              await dbService.updateUserProfile(userCredential.user.uid, { role: "Admin", isPro: isProUser });
           } else {
-              if (profile?.role === "Admin" || profile?.role === "admin" || profile?.role === "teacher") {
-                  assignedRole = profile.role;
-                  sessionStorage.setItem('adminToken', 'true');
-              } else {
-                  assignedRole = "student";
-                  sessionStorage.removeItem('adminToken');
-              }
-              if (adminKey && adminKey === proKey) {
-                  await dbService.updateUserProfile(userCredential.user.uid, { isPro: true });
-              }
+              sessionStorage.removeItem('adminToken');
           }
 
           const { store } = await import('../lib/store');
@@ -100,24 +103,24 @@ export default function AuthScreen() {
         if (userCredential.user) {
           await updateProfile(userCredential.user, { displayName: username.trim() });
           
-          const correctAdminKey = import.meta.env.VITE_ADMIN_KEY;
-          const proKey = import.meta.env.VITE_PRO || "seneca_pro";
-          let assignedRole = "student";
-          let isProUser = false;
-          if (adminKey && adminKey === correctAdminKey) {
-              assignedRole = "Admin";
-          } else if (adminKey && adminKey === proKey) {
-              isProUser = true;
-          }
-          
           const { dbService } = await import('../lib/firebase');
           await dbService.updateUserProfile(userCredential.user.uid, { 
               name: username.trim(),
-              role: assignedRole,
+              role: "student",
               email: email,
-              isPro: isProUser,
-              isSchoolLover: isProUser
+              isPro: false,
+              isSchoolLover: false
           });
+
+          if (adminKey) {
+             try {
+                await fetch('/api/auth/escalate-role', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ uid: userCredential.user.uid, providedKey: adminKey })
+                });
+             } catch(e) {}
+          }
 
           await sendEmailVerification(userCredential.user);
           await signOut(auth);
@@ -170,29 +173,29 @@ export default function AuthScreen() {
       }
 
       let assignedRole = profile.role || "student";
-      const correctAdminKey = import.meta.env.VITE_ADMIN_KEY;
-      const proKey = import.meta.env.VITE_PRO || "seneca_pro";
       let isProUser = !!profile.isPro;
 
-      if (adminKey && adminKey === proKey) {
-          isProUser = true;
+      if (adminKey) {
+          try {
+              const verifyRes = await fetch('/api/auth/escalate-role', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ uid: userCredential.user.uid, providedKey: adminKey })
+              }).then(res => res.json());
+
+              if (verifyRes.success) {
+                  if (verifyRes.role) assignedRole = verifyRes.role;
+                  if (verifyRes.isPro) isProUser = true;
+              }
+          } catch(e) {
+              console.error('Role escalation failed', e);
+          }
       }
 
-      if (adminKey && adminKey === correctAdminKey) {
-          assignedRole = "Admin";
+      if (assignedRole === "Admin" || assignedRole === "admin" || assignedRole === "teacher") {
           sessionStorage.setItem('adminToken', 'true');
-          await dbService.updateUserProfile(userCredential.user.uid, { role: "Admin", isPro: isProUser });
       } else {
-          if (profile.role === "Admin" || profile.role === "admin" || profile.role === "teacher") {
-              assignedRole = profile.role;
-              sessionStorage.setItem('adminToken', 'true');
-          } else {
-              assignedRole = "student";
-              sessionStorage.removeItem('adminToken');
-          }
-          if (adminKey && adminKey === proKey) {
-              await dbService.updateUserProfile(userCredential.user.uid, { isPro: true, isSchoolLover: true });
-          }
+          sessionStorage.removeItem('adminToken');
       }
       
       const { store } = await import('../lib/store');
@@ -221,22 +224,34 @@ export default function AuthScreen() {
     try {
       const userCredential = await signInAnonymously(auth);
       
-      const correctAdminKey = import.meta.env.VITE_ADMIN_KEY;
-      const proKey = import.meta.env.VITE_PRO || "seneca_pro";
       let assignedRole = "student";
       let displayName = "Guest Student";
       let isProUser = false;
 
-      if (adminKey && adminKey === correctAdminKey) {
-        assignedRole = "teacher";
-        displayName = "Guest Teacher";
-        sessionStorage.setItem('adminToken', 'true');
-      } else {
-        sessionStorage.removeItem('adminToken');
-        if (adminKey && adminKey === proKey) {
-          isProUser = true;
-          displayName = "Guest Pro Player";
-        }
+      if (adminKey) {
+          try {
+              const verifyRes = await fetch('/api/auth/escalate-role', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ uid: userCredential.user.uid, providedKey: adminKey })
+              }).then(res => res.json());
+
+              if (verifyRes.success) {
+                  if (verifyRes.role === "Admin") {
+                      assignedRole = "teacher";
+                      displayName = "Guest Teacher";
+                      sessionStorage.setItem('adminToken', 'true');
+                  }
+                  if (verifyRes.isPro) {
+                      isProUser = true;
+                      if (assignedRole !== "teacher") displayName = "Guest Pro Player";
+                  }
+              }
+          } catch(e) {}
+      }
+
+      if (assignedRole !== "teacher") {
+          sessionStorage.removeItem('adminToken');
       }
 
       const { store } = await import('../lib/store');
@@ -255,9 +270,8 @@ export default function AuthScreen() {
       }
     } catch (err: any) {
       if (err?.code === 'auth/api-key-not-valid' || err?.message?.includes('auth/api-key-not-valid')) {
-        const fallbackRole = (adminKey && adminKey === import.meta.env.VITE_ADMIN_KEY) ? "teacher" : "student";
-        if (fallbackRole === "teacher") sessionStorage.setItem('adminToken', 'true');
-        else sessionStorage.removeItem('adminToken');
+        const fallbackRole = "student";
+        sessionStorage.removeItem('adminToken');
         
         const { store } = await import('../lib/store');
         const mockUser = { uid: "local_anon_" + Math.random().toString(36).substr(2, 9), isAnonymous: true, email: "anonymous@local" };
