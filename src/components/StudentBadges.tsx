@@ -19,7 +19,7 @@ const BADGES = [
     gradient: 'from-sky-500/20 to-sky-400/5',
     type: 'streak' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Nhận +50 Tinh Hoa tích lũy'
+    reward: '🔥 Mở khóa: Khung Vòng Ánh Sáng Động Thạch'
   },
   {
     id: 'streak_5',
@@ -61,7 +61,7 @@ const BADGES = [
     gradient: 'from-yellow-500/20 to-amber-500/5',
     type: 'streak' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Nhận Vòng Nguyệt Quế Tinh Thần'
+    reward: '🔥 Mở khóa: Khung Ý Chí Khắc Kỷ'
   },
   {
     id: 'streak_15',
@@ -105,7 +105,7 @@ const BADGES = [
     type: 'streak' as const,
     span: 'col-span-2 min-h-[12.5rem]',
     isVip: true,
-    reward: '🔥 Nhận Tượng Tinh Thần Bất Diệt'
+    reward: '🔥 Mở khóa: Khung Hào Quang Bán Thần rực rỡ'
   },
   {
     id: 'streak_100',
@@ -136,7 +136,7 @@ const BADGES = [
     gradient: 'from-blue-500/20 to-blue-400/5',
     type: 'points' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Thưởng 50 Điểm Tích Lũy Thêm'
+    reward: '🔥 Mở khóa: Khung Viền Tinh Thạch Học Giả'
   },
   {
     id: 'points_300',
@@ -179,7 +179,7 @@ const BADGES = [
     type: 'points' as const,
     span: 'col-span-2 sm:col-span-2 md:col-span-2 md:row-span-2 min-h-[15.5rem]',
     isVip: true,
-    reward: '🔥 Khung viền Cây Oliu & Giấy Trắng'
+    reward: '🔥 Mở khóa: Viền Kim Long Cấp (Vàng Tuyền)'
   },
   {
     id: 'points_2000',
@@ -296,7 +296,7 @@ const BADGES = [
     gradient: 'from-emerald-450/20 to-green-500/5',
     type: 'time' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '✨ Chiếc lá Oliu Trí Tuệ hỗ trợ tịnh tâm'
+    reward: '🔥 Mở khóa: Viền Vầng Sáng Sáng Thế (Hồng Đỏ)'
   },
   {
     id: 'time_180',
@@ -414,7 +414,7 @@ const BADGES = [
     type: 'top1' as const,
     span: 'col-span-2 sm:col-span-2 md:col-span-4 min-h-[12.5rem]',
     isVip: true,
-    reward: '🔥 Tạc danh vào Đế Cung Ánh Sáng'
+    reward: '🔥 Mở khóa: Hiệu ứng 7 Màu Đế Cung Ánh Dạng'
   },
 
   // 5. THÔNG THÁI BÌNH QUÂN (AVERAGE MASTERY - Mức độ thông thạo trung bình)
@@ -459,7 +459,7 @@ const BADGES = [
     type: 'mastery' as const,
     span: 'col-span-1 min-h-[12.5rem]',
     isVip: true,
-    reward: '🔥 Hiện Thân Lời Quyết Từ Các Nữ Thần Số Mệnh'
+    reward: '🔥 Mở khóa: Hiệu Ứng Lời Nguyền Từ Các Nữ Thần Số Mệnh (Hồng Tím Lấp Lánh)'
   }
 ];
 

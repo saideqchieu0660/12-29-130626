@@ -34,7 +34,7 @@ import { DeckList } from "../components/DeckList";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import { ExportStudyReport } from "../components/ExportStudyReport";
 import { useAICooldown, triggerAICooldown } from "../lib/cooldown";
-import { getLevelInfo, getCustomTitleTextClass, getCustomTitleBadgeClass, ALL_TITLES, getUnlockedTitles } from "../utils/xp";
+import { getLevelInfo, getCustomTitleTextClass, getCustomTitleBadgeClass, ALL_TITLES, getUnlockedTitles, getUnlockedBorders, BORDERS_REGISTRY, getAvatarBorderClass } from "../utils/xp";
 import { toast } from "sonner";
 import { getEnvDiagnostics } from "../utils/envDiagnostics";
 
@@ -2609,10 +2609,7 @@ export default function StudentDashboard() {
                             isFirst ? "w-24 h-24 border-4 border-yellow-500/50 shadow-yellow-500/30" : 
                             isSecond ? "w-20 h-20 border-4 border-zinc-400/50 shadow-zinc-400/30" : 
                             "w-20 h-20 border-4 border-amber-600/50 shadow-amber-600/30",
-                            u.avatarBorder === "bronze" ? "ring-4 ring-[#cd7f32] ring-offset-2 ring-offset-white dark:ring-offset-black" :
-                            u.avatarBorder === "silver" ? "ring-4 ring-[#c0c0c0] ring-offset-2 ring-offset-white dark:ring-offset-black" :
-                            u.avatarBorder === "gold" ? "ring-4 ring-[#ffd700] ring-offset-2 ring-offset-white dark:ring-offset-black" :
-                            u.avatarBorder === "diamond" ? "ring-4 ring-[#00ffff] ring-offset-2 ring-offset-white dark:ring-offset-black animate-pulse" : ""
+                            getAvatarBorderClass(u.avatarBorder)
                           )}>
                             {u.photoURL ? (
                               <img src={u.photoURL} alt={u.name} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
@@ -3376,15 +3373,16 @@ export default function StudentDashboard() {
               const equippedTitle = user.title || xpInfo.title;
               const equippedBorder = user.avatarBorder || "none";
               
-              const BORDERS = [
-                { id: "none", label: "Mặc định (Không viền)", color: "" },
-                { id: "bronze", label: "Huy hiệu Đồng", color: "ring-4 ring-[#cd7f32] shadow-[0_0_15px_rgba(205,127,50,0.5)]" },
-                { id: "silver", label: "Huy hiệu Bạc", color: "ring-4 ring-[#c0c0c0] shadow-[0_0_15px_rgba(192,192,192,0.5)]" },
-                { id: "gold", label: "Huy hiệu Vàng", color: "ring-4 ring-[#ffd700] shadow-[0_0_15px_rgba(255,215,0,0.5)]" },
-                { id: "diamond", label: "Huy hiệu Kim Cương", color: "ring-4 ring-[#00ffff] shadow-[0_0_20px_rgba(0,255,255,0.6)] animate-pulse" }
-              ];
+              const BORDERS = getUnlockedBorders(
+                user.points || 0,
+                user.streak || 0,
+                0, // top1Weeks (not tracked in local user mostly)
+                0, // studyTime
+                0, // mastery
+                user.avatarBorder || "none"
+              );
               
-              const AVAILABLE_BORDERS = BORDERS.filter(b => b.id === "none" || b.id === equippedBorder);
+              const AVAILABLE_BORDERS = BORDERS;
               
               const unlockedTitles = getUnlockedTitles(xpInfo.currentLevel, user.title);
 
@@ -4769,10 +4767,7 @@ export default function StudentDashboard() {
               <div className="relative pt-12 pb-8 px-8 flex flex-col items-center">
                 <div className={cn(
                   "w-24 h-24 rounded-full bg-gradient-to-br from-stone-200 to-stone-300 dark:from-zinc-800 dark:to-zinc-900 border-4 border-white dark:border-zinc-950 shadow-xl flex items-center justify-center overflow-hidden mb-4 relative",
-                  selectedUserProfile.avatarBorder === "bronze" ? "ring-4 ring-[#cd7f32] ring-offset-2 ring-offset-white dark:ring-offset-black" :
-                  selectedUserProfile.avatarBorder === "silver" ? "ring-4 ring-[#c0c0c0] ring-offset-2 ring-offset-white dark:ring-offset-black" :
-                  selectedUserProfile.avatarBorder === "gold" ? "ring-4 ring-[#ffd700] ring-offset-2 ring-offset-white dark:ring-offset-black" :
-                  selectedUserProfile.avatarBorder === "diamond" ? "ring-4 ring-[#00ffff] ring-offset-2 ring-offset-white dark:ring-offset-black animate-pulse" : ""
+                  getAvatarBorderClass(selectedUserProfile.avatarBorder)
                 )}>
                   {selectedUserProfile.photoURL ? (
                     <img src={selectedUserProfile.photoURL} alt={selectedUserProfile.name} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />

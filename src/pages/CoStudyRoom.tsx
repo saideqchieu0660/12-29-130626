@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { collection, onSnapshot, doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db, FirebaseListenerManager } from "../lib/firebase";
 import { store } from "../lib/store";
+import { getAvatarBorderClass } from "../utils/xp";
 import { motion, AnimatePresence } from "motion/react";
 import { Users, Clock, ArrowLeft, Play, Pause, RefreshCw, Award, Target, ThumbsUp, ListTodo, Plus, Check, Trash2, Headphones, Sparkles, Volume2, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -21,13 +22,7 @@ interface ActiveUser {
   avatarBorder?: string;
 }
 
-const BORDERS = [
-  { id: "none", color: "" },
-  { id: "bronze", color: "ring-2 ring-[#cd7f32] shadow-[0_0_8px_rgba(205,127,50,0.4)]" },
-  { id: "silver", color: "ring-2 ring-[#c0c0c0] shadow-[0_0_8px_rgba(192,192,192,0.4)]" },
-  { id: "gold", color: "ring-2 ring-[#ffd700] shadow-[0_0_10px_rgba(255,215,0,0.4)]" },
-  { id: "diamond", color: "ring-2 ring-[#00ffff] shadow-[0_0_12px_rgba(0,255,255,0.5)] animate-pulse" }
-];
+
 
 interface TaskItem {
   id: string;
@@ -487,7 +482,7 @@ export default function CoStudyRoom() {
                       <div className="flex items-center gap-3">
                          <div className={cn(
                            "w-10 h-10 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-600 flex items-center justify-center text-white font-bold uppercase shadow-sm shrink-0 relative",
-                           BORDERS.find(b => b.id === user.avatarBorder)?.color || ""
+                           getAvatarBorderClass(user.avatarBorder)
                          )}>
                             {user.name?.charAt(0) || "U"}
                          </div>
