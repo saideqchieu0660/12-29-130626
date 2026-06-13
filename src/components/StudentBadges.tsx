@@ -417,7 +417,7 @@ const BADGES = [
     reward: '🔥 Tạc danh vào Đế Cung Ánh Sáng'
   },
 
-  // 5. NGỘ TÍNH BÌNH QUÂN (AVERAGE MASTERY - Mức độ thông thạo trung bình)
+  // 5. THÔNG THÁI BÌNH QUÂN (AVERAGE MASTERY - Mức độ thông thạo trung bình)
   {
     id: 'mastery_50',
     name: 'Giác Ngộ Tân Tiến',
@@ -711,9 +711,9 @@ export const StudentBadges = ({
     { id: "all" as const, label: "Tất Cả", desc: "Toàn bộ" },
     { id: "streak" as const, label: "Khổ Hạnh 🔥", desc: "Đăng nhập" },
     { id: "points" as const, label: "Tinh Hoa 💎", desc: "Tích lũy" },
-    { id: "time" as const, label: "Khổ Tu ⏳", desc: "Thời gian học" },
+    { id: "time" as const, label: "Nhẫn Nại ⏳", desc: "Thời gian học" },
     { id: "top1" as const, label: "Hào Quang 👑", desc: "Top 1 BXH" },
-    { id: "mastery" as const, label: "Ngộ Tính 🎓", desc: "Độ thông thạo" },
+    { id: "mastery" as const, label: "Thông Thái 🎓", desc: "Độ thông thạo" },
   ];
 
   return (
@@ -761,7 +761,7 @@ export const StudentBadges = ({
                </div>
             </div>
             <div className="px-3.5 py-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-700 dark:text-purple-400 text-xs font-black flex flex-col justify-center items-center gap-0.5 text-center shadow-inner col-span-2 sm:col-span-1">
-               <span className="opacity-65 font-medium">Ngộ Tính</span>
+               <span className="opacity-65 font-medium">Thông Thái</span>
                <div className="flex items-center gap-1 font-mono text-sm">
                   <Sparkles className="w-4 h-4 text-purple-500" /> {averageMastery}%
                </div>

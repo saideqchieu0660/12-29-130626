@@ -276,11 +276,8 @@ export default function AuthScreen() {
         const { store } = await import('../lib/store');
         const mockUser = { uid: "local_anon_" + Math.random().toString(36).substr(2, 9), isAnonymous: true, email: "anonymous@local" };
         await store.setFirebaseUser(mockUser);
-        if (fallbackRole === "teacher") {
-          navigate('/teacher');
-        } else {
-          navigate('/dashboard');
-        }
+        
+        navigate('/dashboard');
       } else {
         setError(err.message || "Lỗi đăng nhập với tư cách khách.");
       }

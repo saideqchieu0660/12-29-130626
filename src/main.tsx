@@ -18,7 +18,7 @@ try {
     
     // 2. OffscreenCanvas (frequently used by tsparticles)
     if (typeof OffscreenCanvas !== "undefined") {
-      OffscreenCanvas.prototype.getBoundingClientRect = OffscreenCanvas.prototype.getBoundingClientRect || function() {
+      (OffscreenCanvas.prototype as any).getBoundingClientRect = (OffscreenCanvas.prototype as any).getBoundingClientRect || function(this: any) {
         return { width: this.width || 0, height: this.height || 0, top: 0, left: 0, right: this.width || 0, bottom: this.height || 0, x: 0, y: 0, toJSON: () => this };
       };
     }

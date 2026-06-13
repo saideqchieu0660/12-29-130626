@@ -108,7 +108,6 @@ const QuizCooldownTimer = ({ user }: any) => {
 };
 
 import { UserRoleBadge } from "../components/UserRoleBadge";
-import { FramerFireworks } from "../components/FramerFireworks";
 
 import { useSound } from "../hooks/useSound";
 import { TopPerformersWidget, getTier } from "../components/TopPerformersWidget";
@@ -188,7 +187,6 @@ export default function StudentDashboard() {
   const { click, success, error } = useSound();
   const user = store.getCurrentUser();
   const prevLevelRef = useRef<number | null>(null);
-  const [showFramerFireworks, setShowFramerFireworks] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -196,14 +194,8 @@ export default function StudentDashboard() {
       const currentLevel = user.level || xpInfo.currentLevel;
       
       if (prevLevelRef.current !== null && currentLevel > prevLevelRef.current) {
-         setShowFramerFireworks(true);
-         toast.success(`🎉 Lệnh cấp ấn chí tôn! Thăng cấp ${currentLevel}!`, {
-           description: "Ngài vừa mở khóa ranh giới mới. Quá đẳng cấp! Hãy xem xét đổi danh hiệu mới trong hồ sơ."
-         });
-         import("../lib/celebration").then(({ triggerCelebration }) => {
-           triggerCelebration();
-           setTimeout(triggerCelebration, 800);
-           setTimeout(() => triggerCelebration(true), 2000);
+         toast.success(`🎉 Trí tuệ thăng hoa! Bạn đã đạt cấp ${currentLevel}!`, {
+           description: "Bạn vừa mở khóa chân trời nhận thức mới. Thật xuất sắc! Hãy xem xét đổi danh hiệu triết gia trong hồ sơ."
          });
       }
       prevLevelRef.current = currentLevel;
@@ -1491,7 +1483,6 @@ export default function StudentDashboard() {
 
   return (
     <div className="space-y-8 animate-in fade-in pb-12 relative w-full max-w-full overflow-x-hidden">
-      <FramerFireworks active={showFramerFireworks} onComplete={() => setShowFramerFireworks(false)} />
       <OnboardingTour onComplete={() => {
         const hasRun = localStorage.getItem("hasRunTutorial");
         if (hasRun !== "true") {

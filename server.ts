@@ -153,37 +153,6 @@ let googleServiceAccountStatus = initializeFirebaseAdmin();
 // Rate Limit Defense: Dynamic Round-Robin API Key Manager
 
 // Helper to securely escalate profile role from backend
-app.post("/api/auth/escalate-role", express.json(), async (req, res) => {
-    const { uid, providedKey } = req.body;
-    if (!uid || !providedKey) return res.status(400).json({ error: "Missing uid or key" });
-    
-    let isPro = false;
-    let newRole = null;
-    
-    if (providedKey === process.env.VITE_ADMIN_KEY || providedKey === "seneca") {
-       newRole = "Admin";
-       isPro = true;
-    } else if (providedKey === (process.env.VITE_PRO || "seneca_pro")) {
-       isPro = true;
-    }
-    
-    if (!newRole && !isPro) {
-       return res.json({ success: false, message: "Invalid key." });
-    }
-    
-    if (admin.apps.length > 0) {
-       try {
-           const updateData: any = { isPro };
-           if (newRole) updateData.role = newRole;
-           await admin.firestore().collection("users").doc(uid).set(updateData, { merge: true });
-           return res.json({ success: true, role: newRole, isPro });
-       } catch(err: any) {
-           console.error("Failed to upgrade role server side:", err);
-           return res.status(500).json({ error: "DB Error" });
-       }
-    }
-    return res.status(500).json({ error: "Admin SDK not initialized" });
-});
 
 const GEMINI_KEYS = Object.keys(process.env)
   .filter(key => key.startsWith('GEMINI_API_KEY_'))
@@ -927,6 +896,38 @@ function handleGroqError(state: KeyState, err: any) {
 }
 
 const app = express();
+
+app.post("/api/auth/escalate-role", express.json(), async (req, res) => {
+    const { uid, providedKey } = req.body;
+    if (!uid || !providedKey) return res.status(400).json({ error: "Missing uid or key" });
+    
+    let isPro = false;
+    let newRole = null;
+    
+    if (providedKey === process.env.VITE_ADMIN_KEY || providedKey === "seneca") {
+       newRole = "Admin";
+       isPro = true;
+    } else if (providedKey === (process.env.VITE_PRO || "seneca_pro")) {
+       isPro = true;
+    }
+    
+    if (!newRole && !isPro) {
+       return res.json({ success: false, message: "Invalid key." });
+    }
+    
+    if (admin.apps.length > 0) {
+       try {
+           const updateData: any = { isPro };
+           if (newRole) updateData.role = newRole;
+           await admin.firestore().collection("users").doc(uid).set(updateData, { merge: true });
+           return res.json({ success: true, role: newRole, isPro });
+       } catch(err: any) {
+           console.error("Failed to upgrade role server side:", err);
+           return res.status(500).json({ error: "DB Error" });
+       }
+    }
+    return res.status(500).json({ error: "Admin SDK not initialized" });
+});
 const PORT = 3000;
 
 app.use(express.json({ limit: "50mb" }));
