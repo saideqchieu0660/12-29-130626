@@ -360,13 +360,14 @@ export default function Agent3Widget() {
       const decks = store.getDecks();
       const baseContext = responseMode === "direct"
         ? "You are Agent 3 - Personal Assistant (Direct & Blunt Mode). STRICT RULES:\n" +
-          "- NO SOCRATIC QUESTIONING: Tuyệt đối không dùng phương pháp Socratic, không gợi mở, không đặt câu hỏi ngược lại bắt học sinh động não. Hãy trả lời thẳng tuột, ngắn gọn, cực kỳ dứt khoát và trực tiếp theo giọng điệu hoàng gia.\n" +
+          "- NO SOCRATIC QUESTIONING: Tuyệt đối không dùng phương pháp Socratic, không gợi mở, không đặt ra bất kỳ câu hỏi nào. Đi thẳng cực kỳ ngay vào đáp án. Cấm vòng vo dông dài.\n" +
           "- DIAGRAMS: KHÔNG ĐƯỢC tự ý vẽ mindmap/chart trừ khi người dùng ra lệnh rõ ràng bằng cú pháp: '/draw [chủ đề]'. Nếu không có lệnh này, chỉ trả lời bằng văn bản hoặc danh sách.\n" +
-          "- FORMAT: Khi có lệnh '/draw', bắt buộc sinh mã Mermaid.js bắt đầu bằng 'mindmap'. Dùng xuống dòng (\\n) và thụt lề 2-4 spaces. KHÔNG viết trên 1 dòng.\n" +
+          "- FORMAT VẼ SƠ ĐỒ: Khi có lệnh '/draw', BẮT BUỘC sinh mã Mermaid.js bắt đầu bằng 'mindmap'. Dùng xuống dòng (\\n) và thụt lề 2-4 spaces. KHÔNG viết trên 1 dòng. QUAN TRỌNG: Mọi tiêu đề / nhãn dán của node MUST luôn được đặt trong ngoặc vuông và dấu ngoặc kép đôi, ví dụ: `id1[\"Khái niệm\"]`, `id2[\"Khái niệm sinh học (H2O)\"]`. Tuyệt đối bỏ qua dạng (( )) hoặc ( ).\n" +
           "- Student is studying. Deck info available."
         : "You are Agent 3 - Socrates AI Coach. STRICT RULES:\n" +
+          "- VÒNG VO LÀ TỘI ÁC: Nếu phải giải thích, hãy giải thích NGAY LẬP TỨC thẳng vào trọng tâm. Đi thẳng vào ruột vấn đề, không mào đầu.\n" +
           "- DIAGRAMS: KHÔNG ĐƯỢC tự ý vẽ mindmap/chart trừ khi người dùng ra lệnh rõ ràng bằng cú pháp: '/draw [chủ đề]'. Nếu không có lệnh này, chỉ trả lời bằng văn bản hoặc danh sách.\n" +
-          "- FORMAT: Khi có lệnh '/draw', bắt buộc sinh mã Mermaid.js bắt đầu bằng 'mindmap'. Dùng xuống dòng (\\n) và thụt lề 2-4 spaces. KHÔNG viết trên 1 dòng.\n" +
+          "- FORMAT VẼ SƠ ĐỒ: Khi có lệnh '/draw', BẮT BUỘC sinh mã Mermaid.js bắt đầu bằng 'mindmap'. Dùng xuống dòng (\\n) và thụt lề 2-4 spaces. KHÔNG viết trên 1 dòng. QUAN TRỌNG: Mọi tiêu đề / nhãn dán của node MUST luôn được đặt trong ngoặc vuông và dấu ngoặc kép đôi, ví dụ: `id1[\"Khái niệm\"]`, `id2[\"Khái niệm sinh học (H2O)\"]`. Tuyệt đối bỏ qua dạng (( )) hoặc ( ).\n" +
           "- MODE: Nếu người dùng đang chọn 'Trực diện' (Direct mode), hãy trả lời ngắn gọn, thẳng thắn, không dạy đời, không vòng vo, bỏ qua chào hỏi.\n" +
           "- Student is studying. Deck info available.";
       const context = customContext ? `${baseContext}\nCurrent Card Context: ${customContext}` : baseContext;
@@ -1094,15 +1095,24 @@ function parseMermaidMindmap(text: string): MindmapNode | null {
     let label = trimmed;
     let shape: MindmapNode["shape"] = "default";
     
-    if (trimmed.startsWith("((") && trimmed.endsWith("))")) {
-      label = trimmed.substring(2, trimmed.length - 2).trim();
-      shape = "circle";
-    } else if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
-      label = trimmed.substring(1, trimmed.length - 1).trim();
-      shape = "rounded";
-    } else if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
-      label = trimmed.substring(1, trimmed.length - 1).trim();
-      shape = "square";
+    // Match optional ID prefix followed by shape brackets
+    const match = trimmed.match(/^(?:[a-zA-Z0-9_\-]+)?(\(\(|\[\[|\(|\{|\[)(.+?)(\)\)|\]\]|\)|\}|\])$/);
+    if (match) {
+      const startBracket = match[1];
+      let innerText = match[2].trim();
+      
+      // Bỏ ngoặc kép nếu AI sinh ra
+      if ((innerText.startsWith('"') && innerText.endsWith('"')) || (innerText.startsWith("'") && innerText.endsWith("'"))) {
+         innerText = innerText.substring(1, innerText.length - 1).trim();
+      }
+      
+      label = innerText;
+      if (startBracket === "((") shape = "circle";
+      else if (startBracket === "[" || startBracket === "[[") shape = "square";
+      else if (startBracket === "(" || startBracket === "{") shape = "rounded";
+    } else {
+      // Trường hợp thuần chữ (không bọc ngoặc)
+      label = trimmed;
     }
     
     const node: MindmapNode = {
